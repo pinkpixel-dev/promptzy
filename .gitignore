@@ -24,7 +24,8 @@ dist-ssr
 *.sw?
 
 # Other
-pollinations.txt
+pollinations.md
+supabasekeys.md
 mybuttons.txt
 pretty-elements.txt
 
