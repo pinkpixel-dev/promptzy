@@ -24,6 +24,4 @@ dist-ssr
 *.sw?
 
 # Other
-DEPRECATION_GUIDE.md
-PWA_SETUP_GUIDE.md
-PUBLISHING_GUIDE.md
+pollinations.txt
