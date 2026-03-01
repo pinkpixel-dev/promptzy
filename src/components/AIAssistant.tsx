@@ -147,7 +147,7 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
         let hasReceivedContent = false;
 
         // Store the reader in the ref for cleanup
-        eventSourceRef.current = { close: () => reader.cancel() } as any;
+        eventSourceRef.current = { close: () => reader.cancel() };
 
         try {
           while (true) {
