@@ -14,13 +14,18 @@ const TagFilter = ({ allTags, selectedTags, onToggleTag }: TagFilterProps) => {
 
   return (
     <div className="mb-6">
-      <h3 className="text-sm font-medium text-muted-foreground mb-2">Filter by tags:</h3>
+      <p
+        className="text-xs font-semibold tracking-widest uppercase mb-2.5"
+        style={{ color: "var(--accent-yellow)", opacity: 0.85 }}
+      >
+        Filter by tag
+      </p>
       <div className="flex flex-wrap gap-2">
         {allTags.map((tag) => (
           <button
             key={tag.id}
             onClick={() => onToggleTag(tag.id)}
-            className={`tag ${selectedTags.includes(tag.id) ? 'tag-active' : ''}`}
+            className={`tag cursor-pointer ${selectedTags.includes(tag.id) ? "tag-active" : ""}`}
           >
             {tag.name}
           </button>

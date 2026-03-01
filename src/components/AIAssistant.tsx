@@ -287,11 +287,25 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
       <Collapsible
         open={isOpen}
         onOpenChange={setIsOpen}
-        className="bg-secondary/90 backdrop-blur-sm rounded-lg shadow-lg border border-purple-500/20"
+        className="rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          background: "linear-gradient(180deg, rgba(13,20,33,0.92) 0%, rgba(10,16,28,0.95) 100%)",
+          backdropFilter: "saturate(180%) blur(24px)",
+          WebkitBackdropFilter: "saturate(180%) blur(24px)",
+          border: "1px solid rgba(34,211,238,0.22)",
+          boxShadow: "0 12px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 40px rgba(34,211,238,0.08)",
+        }}
       >
         <CollapsibleTrigger asChild>
           <Button
-            className="w-full flex items-center justify-between p-4 rounded-lg bg-purple-600 hover:bg-purple-700 transition-all duration-200"
+            className="w-full flex items-center justify-between p-4 rounded-t-2xl transition-all duration-200"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+              color: "hsl(215,28%,9%)",
+              border: "none",
+              fontWeight: "700",
+              boxShadow: "0 0 20px rgba(34,211,238,0.35), 0 0 36px rgba(251,191,36,0.18)",
+            }}
           >
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
@@ -352,14 +366,36 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
               }
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="min-h-[60px] sm:min-h-[80px] bg-secondary/50 border-secondary text-xs sm:text-sm"
+              className="min-h-[60px] sm:min-h-[80px] text-xs sm:text-sm"
+              style={{
+                background: "rgba(0,0,0,0.25)",
+                border: "1px solid rgba(255,255,255,0.09)",
+                color: "var(--text-strong)",
+                borderRadius: "12px",
+              }}
             />
           </div>
 
           <Button
             onClick={handleGeneratePrompt}
             disabled={response.loading || !prompt.trim()}
-            className="w-full bg-purple-500 hover:bg-purple-700"
+            className="w-full font-bold"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+              border: "none",
+              color: "hsl(215,28%,9%)",
+              boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
+            }}
+            onMouseEnter={e => {
+              if (!response.loading && prompt.trim()) {
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+              }
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+            }}
           >
             {response.loading ? "Generating..." : "Generate Prompt"}
           </Button>
@@ -368,21 +404,53 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
             <div className="space-y-2 sm:space-y-3">
               <div
                 ref={responseRef}
-                className="bg-secondary p-2 sm:p-3 rounded-md max-h-[150px] sm:max-h-[200px] overflow-y-auto whitespace-pre-wrap text-xs sm:text-sm"
+                className="p-2 sm:p-3 rounded-xl max-h-[150px] sm:max-h-[200px] overflow-y-auto whitespace-pre-wrap text-xs sm:text-sm font-mono"
+                style={{
+                  background: "rgba(0,0,0,0.30)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  color: "var(--text-strong)",
+                }}
               >
                 {response.text}
               </div>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 text-xs sm:text-sm"
+                  className="flex-1 text-xs sm:text-sm transition-all duration-200"
                   onClick={handleCopyResponse}
+                  style={{
+                    background: "rgba(34,211,238,0.10)",
+                    border: "1px solid rgba(34,211,238,0.30)",
+                    color: "#22d3ee",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.20)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(34,211,238,0.30)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.10)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  }}
                 >
                   <Copy className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Copy
                 </Button>
                 <Button
-                  className="flex-1 bg-purple-500 hover:bg-purple-700 text-xs sm:text-sm"
+                  className="flex-1 font-bold text-xs sm:text-sm transition-all duration-200"
                   onClick={handleUsePrompt}
+                  style={{
+                    background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+                    border: "none",
+                    color: "hsl(215,28%,9%)",
+                    boxShadow: "0 0 18px rgba(34,211,238,0.38), 0 0 32px rgba(251,191,36,0.18)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 26px rgba(34,211,238,0.52), 0 0 46px rgba(251,191,36,0.28)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.38), 0 0 32px rgba(251,191,36,0.18)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                  }}
                 >
                   Use as Prompt
                 </Button>

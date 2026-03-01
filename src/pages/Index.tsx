@@ -356,72 +356,92 @@ const Index = () => {
   }, [filteredPrompts, colCount]);
 
   return (
-    <div key={refreshKey} className="container mx-auto py-8 px-4 min-h-screen max-w-5xl">
-      <Header
-        onAddPrompt={handleAddPrompt}
-        onRefreshPrompts={handleRefreshPrompts}
-        isRefreshing={isRefreshing}
-      />
-
-      <div className="mb-8 space-y-6">
-        <SearchInput searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-        <TagFilter
-          allTags={allTags}
-          selectedTags={selectedTags}
-          onToggleTag={handleToggleTag}
+    <div key={refreshKey} className="min-h-screen px-4 py-8">
+      <div className="mx-auto max-w-5xl">
+        <Header
+          onAddPrompt={handleAddPrompt}
+          onRefreshPrompts={handleRefreshPrompts}
+          isRefreshing={isRefreshing}
         />
-      </div>
 
-      {filteredPrompts.length > 0 ? (
-        <div className="flex gap-4 items-start">
-          {columns.map((col, colIdx) => (
-            <div key={colIdx} className="flex-1 flex flex-col gap-4">
-              {col.map(prompt => (
-                <PromptCard
-                  key={prompt.id}
-                  prompt={prompt}
-                  onEdit={handleEditPrompt}
-                  onDelete={handleDeleteClick}
-                />
-              ))}
-            </div>
-          ))}
+        {/* Search + tags glass panel */}
+        <div
+          className="glass mb-8 p-5 space-y-4"
+        >
+          <SearchInput searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+          <TagFilter
+            allTags={allTags}
+            selectedTags={selectedTags}
+            onToggleTag={handleToggleTag}
+          />
         </div>
-      ) : (
-        <EmptyState onAddPrompt={handleAddPrompt} isFiltered={isFiltered} />
-      )}
 
-      <PromptForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        onSave={handleSavePrompt}
-        editingPrompt={editingPrompt}
-      />
-
-      <AIAssistant onUsePrompt={handleUseAIPrompt} />
-      {/* Delete confirmation dialog */}
-      <AlertDialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
-          </AlertDialogHeader>
-          <AlertDialogDescription>
-            Are you sure you want to delete this prompt?
-          </AlertDialogDescription>
-          <div className="flex items-center space-x-2 mt-4">
-            <Checkbox
-              id="suppress-delete-confirm"
-              checked={suppressDeleteConfirm}
-              onCheckedChange={(val) => toggleSuppressDeleteConfirm(!!val)}
-            />
-            <Label htmlFor="suppress-delete-confirm">Don't show this again</Label>
+        {filteredPrompts.length > 0 ? (
+          <div className="flex gap-4 items-start">
+            {columns.map((col, colIdx) => (
+              <div key={colIdx} className="flex-1 flex flex-col gap-4">
+                {col.map(prompt => (
+                  <PromptCard
+                    key={prompt.id}
+                    prompt={prompt}
+                    onEdit={handleEditPrompt}
+                    onDelete={handleDeleteClick}
+                  />
+                ))}
+              </div>
+            ))}
           </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        ) : (
+          <EmptyState onAddPrompt={handleAddPrompt} isFiltered={isFiltered} />
+        )}
+
+        <PromptForm
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          onSave={handleSavePrompt}
+          editingPrompt={editingPrompt}
+        />
+
+        <AIAssistant onUsePrompt={handleUseAIPrompt} />
+
+        {/* Delete confirmation dialog */}
+        <AlertDialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+          <AlertDialogContent
+            style={{
+              background: "hsl(215,25%,12%)",
+              border: "1px solid rgba(255,255,255,0.10)",
+            }}
+          >
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Delete</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription>
+              Are you sure you want to delete this prompt?
+            </AlertDialogDescription>
+            <div className="flex items-center space-x-2 mt-4">
+              <Checkbox
+                id="suppress-delete-confirm"
+                checked={suppressDeleteConfirm}
+                onCheckedChange={(val) => toggleSuppressDeleteConfirm(!!val)}
+              />
+              <Label htmlFor="suppress-delete-confirm">Don't show this again</Label>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmDelete}
+                style={{
+                  background: "linear-gradient(135deg, rgba(251,113,133,0.85) 0%, rgba(34,211,238,0.70) 100%)",
+                  color: "hsl(215,28%,9%)",
+                  border: "1px solid rgba(251,113,133,0.30)",
+                }}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 };

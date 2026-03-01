@@ -14,34 +14,95 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4 sm:gap-0">
-      <div className="flex items-center gap-2">
+    <header className="glass glass__bar rounded-2xl px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
+      <div className="flex items-center gap-3">
         <AnimatedLogo />
-        <h1 className="text-2xl sm:text-3xl font-bold">Promptzy</h1>
+        <div className="flex flex-col leading-tight">
+          <h1
+            className="text-2xl sm:text-3xl font-bold tracking-tight"
+            style={{
+              background: "linear-gradient(90deg, #22d3ee 0%, #fbbf24 55%, #f43f8e 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              filter: "drop-shadow(0 0 12px rgba(34,211,238,0.35))",
+            }}
+          >
+            Promptzy
+          </h1>
+          <span className="text-xs" style={{ color: "var(--text-soft)" }}>Your AI prompt library</span>
+        </div>
       </div>
+
       <div className="flex gap-2 w-full sm:w-auto">
         <Button
           variant="outline"
           size="sm"
           onClick={onRefreshPrompts}
           disabled={isRefreshing}
-          className="flex items-center gap-1 flex-1 sm:flex-none"
+          className="flex items-center gap-1.5 flex-1 sm:flex-none transition-all duration-200"
+          style={{
+            background: "rgba(34,211,238,0.12)",
+            border: "1px solid rgba(34,211,238,0.35)",
+            color: "#22d3ee",
+            boxShadow: "0 0 12px rgba(34,211,238,0.15)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.35)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(34,211,238,0.15)";
+          }}
         >
-          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          <span className="hidden xs:inline">{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+          <span className="hidden xs:inline">{isRefreshing ? "Refreshing…" : "Refresh"}</span>
         </Button>
+
         <Button
           variant="outline"
           size="sm"
           onClick={() => setIsSettingsOpen(true)}
-          className="flex items-center gap-1 flex-1 sm:flex-none"
+          className="flex items-center gap-1.5 flex-1 sm:flex-none transition-all duration-200"
+          style={{
+            background: "rgba(251,191,36,0.12)",
+            border: "1px solid rgba(251,191,36,0.35)",
+            color: "#fbbf24",
+            boxShadow: "0 0 12px rgba(251,191,36,0.15)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(251,191,36,0.35)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(251,191,36,0.15)";
+          }}
         >
           <Settings className="h-4 w-4" />
           <span className="hidden xs:inline">Settings</span>
         </Button>
+
         <Button
           onClick={onAddPrompt}
-          className="bg-purple-600 hover:bg-purple-700 flex items-center gap-1 flex-1 sm:flex-none"
+          size="sm"
+          className="flex items-center gap-1.5 flex-1 sm:flex-none font-semibold transition-all duration-200"
+          style={{
+            background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+            border: "none",
+            color: "hsl(215,28%,9%)",
+            boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
+            fontWeight: "700",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
+            (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
+            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+          }}
         >
           <Plus className="h-4 w-4" />
           <span className="hidden xs:inline">Add Prompt</span>

@@ -1,80 +1,78 @@
 @import "tailwindcss";
-
-/* Class-based dark mode (matches .dark class on <html>) */
-@custom-variant dark (&:is(.dark, .dark *));
-
-/* Plugins */
-@plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
+@plugin "tailwindcss-animate";
 
 /* ─── Theme Tokens ─────────────────────────────────────── */
-@theme {
-  /* Custom breakpoint */
-  --breakpoint-xs: 475px;
+@layer base {
+  :root {
+    /* Custom breakpoint */
+    --breakpoint-xs: 475px;
 
-  /* Semantic color tokens — mapped to runtime CSS custom properties */
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
+    /* Semantic color tokens — mapped to runtime CSS custom properties */
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
 
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
 
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
 
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
 
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
 
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
 
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
 
-  /* Sidebar colors */
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
+    /* Sidebar colors */
+    --color-sidebar: hsl(var(--sidebar-background));
+    --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+    --color-sidebar-primary: hsl(var(--sidebar-primary));
+    --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+    --color-sidebar-accent: hsl(var(--sidebar-accent));
+    --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+    --color-sidebar-border: hsl(var(--sidebar-border));
+    --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  /* Custom purple palette */
-  --color-purple-100: #E5DEFF;
-  --color-purple-300: #9b87f5;
-  --color-purple-500: #7E69AB;
-  --color-purple-700: #6E59A5;
-  --color-purple-900: #352F46;
+    /* Accent palette — cyan · yellow · rose-pink */
+    --color-accent-cyan:   #22d3ee;
+    --color-accent-yellow: #facc15;
+    --color-accent-rose:   #F3397E;
 
-  /* Border radius — tied to the runtime --radius var */
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
+    /* Border radius — tied to the runtime --radius var */
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
 
-  /* Custom animations */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-fade-in: fade-in 0.2s ease-out;
-  --animate-fade-out: fade-out 0.2s ease-out;
+    /* Custom animations */
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+    --animate-fade-in: fade-in 0.3s ease-out;
+    --animate-fade-out: fade-out 0.3s ease-out;
+    --animate-slide-up: slide-up 0.35s ease-out;
+  }
 }
 
 /* ─── Container utility ────────────────────────────────── */
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= 1400px) {
-    max-width: 1400px;
+@layer components {
+  .container {
+    margin-inline: auto;
+    padding-inline: 2rem;
+    @media (width >= 1400px) {
+      max-width: 1400px;
+    }
   }
 }
 
@@ -88,125 +86,297 @@
   to   { height: 0; opacity: 0; }
 }
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fade-out {
   from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 0; transform: translateY(8px); }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Background grid decoration ──────────────────────── */
+@keyframes bgPulse {
+  0%, 100% { opacity: 0.03; }
+  50%       { opacity: 0.06; }
 }
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* ── Dark slate-gray base ── */
+    --background: 215 28% 9%;
+    --foreground: 210 20% 96%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 215 25% 12%;
+    --card-foreground: 210 20% 96%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 215 25% 11%;
+    --popover-foreground: 210 20% 96%;
 
-    --primary: 252 79% 65%;
-    --primary-foreground: 0 0% 98%;
+    /* Cyan as primary */
+    --primary: 188 94% 53%;
+    --primary-foreground: 215 28% 9%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 215 20% 17%;
+    --secondary-foreground: 210 20% 96%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 215 20% 17%;
+    --muted-foreground: 215 16% 57%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 215 20% 20%;
+    --accent-foreground: 210 20% 96%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 20% 96%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 252 79% 65%;
+    --border: 215 20% 20%;
+    --input: 215 20% 17%;
+    --ring: 188 94% 53%;
 
     --radius: 0.75rem;
+
+    /* ── Glass tokens ── */
+    --glass-border: rgba(255, 255, 255, 0.22);
+    --glass-blur:   24px;
+    --glass-shadow: 0 8px 48px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.22);
+
+    /* ── Accent palette exposed as CSS variables ── */
+    --accent-cyan:   #22d3ee;
+    --accent-yellow: #fbbf24;
+    --accent-rose:   #f43f8e;
+
+    /* ── Text helpers ── */
+    --text-strong: rgba(255, 255, 255, 0.95);
+    --text-soft:   rgba(255, 255, 255, 0.65);
   }
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-purple-300/20 selection:text-white;
+    border-color: var(--color-border);
+  }
+
+  ::selection {
+    background-color: rgba(34, 211, 238, 0.22);
+    color: #fff;
+  }
+
+  html, body {
+    height: 100%;
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: hsl(215, 25%, 8%);
+    color: hsl(210, 20%, 96%);
+    position: relative;
   }
 
+  /* ── Layered background: ambient orbs + dot grid + noise grain ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      /* Ambient light orbs — big, saturated, these give the glass something to blur */
+      radial-gradient(ellipse 600px 500px at 15% 15%, rgba(34,211,238,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 600px at 85% 80%, rgba(244,63,142,0.14)  0%, transparent 70%),
+      radial-gradient(ellipse 450px 400px at 55%  5%, rgba(251,191,36,0.16)  0%, transparent 65%),
+      radial-gradient(ellipse 350px 350px at 30% 85%, rgba(251,191,36,0.10)  0%, transparent 60%),
+      radial-gradient(ellipse 300px 300px at 70% 40%, rgba(34,211,238,0.08)  0%, transparent 55%),
+      /* Subtle dot grid for texture */
+      radial-gradient(circle 1px at center, rgba(255,255,255,0.08) 0%, transparent 100%);
+    background-size:
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      24px 24px;
+    background-attachment: fixed;
+  }
+
+  /* Noise grain overlay — gives the dark background a textured, matte feel */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 180px 180px;
+  }
+
+  /* Ensure main content sits above the pseudo-element layers */
+  body > #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── Glass utility ─────────────────────────────────── */
   .glass {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
+    backdrop-filter: saturate(180%) blur(var(--glass-blur));
+    -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      var(--glass-shadow),
+      inset 0 0 60px rgba(255,255,255,0.04);
+    border-radius: 16px;
+    position: relative;
   }
 
+  .glass--dense {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.12) 100%);
+  }
+
+  .glass--light {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+  }
+
+  /* Titlebar strip inside glass panels */
+  .glass__bar {
+    background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.08) 100%);
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  /* ─── Prompt card ────────────────────────────────────── */
   .prompt-card {
-    @apply bg-gradient-to-br from-secondary to-secondary/80;
-    @apply transition-all duration-300;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%);
+    backdrop-filter: saturate(180%) blur(var(--glass-blur));
+    -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      var(--glass-shadow),
+      inset 0 0 40px rgba(255,255,255,0.03);
+    border-radius: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
   }
 
   .prompt-card:hover {
-    @apply from-secondary/90 to-secondary/60;
+    border-color: rgba(34,211,238,0.50);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.09) 100%);
+    box-shadow:
+      0 16px 48px rgba(0,0,0,0.60),
+      0 0 0 1px rgba(34,211,238,0.25),
+      0 0 30px rgba(34,211,238,0.12),
+      0 0 60px rgba(251,191,36,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 0 40px rgba(255,255,255,0.04);
+    transform: translateY(-3px);
   }
 
+  /* ─── Tags ───────────────────────────────────────────── */
   .tag {
-    @apply bg-purple-300/20 text-purple-300 text-xs px-2 py-1 rounded-full;
-    @apply transition-all duration-200 hover:bg-purple-300/30;
+    background: rgba(34,211,238,0.10);
+    color: #22d3ee;
+    border: 1px solid rgba(34,211,238,0.20);
+    font-size: 0.70rem;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .tag:hover {
+    background: rgba(34,211,238,0.18);
+    border-color: rgba(34,211,238,0.35);
   }
 
   .tag-active {
-    @apply bg-purple-300 text-black;
+    background: rgba(34,211,238,0.85);
+    color: hsl(215,28%,9%);
+    border-color: transparent;
+    font-weight: 600;
   }
 
+  /* ─── Btn hover shimmer ──────────────────────────────── */
   .btn-hover-effect {
-    @apply relative overflow-hidden;
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Robot Logo Animations */
+  .btn-hover-effect::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    transition: background 0.2s;
+    pointer-events: none;
+  }
+
+  .btn-hover-effect:hover::after {
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ─── Robot Logo Animations ──────────────────────────── */
   .robot-logo-container {
-    @apply transition-transform duration-300 ease-in-out;
+    transition: transform 0.3s ease-in-out;
   }
 
-  .robot-logo-container:hover {
-    animation: robotBounce 0.6s ease-in-out;
-  }
-
-  .robot-logo {
-    @apply transition-all duration-300 ease-in-out;
-    filter: drop-shadow(0 0 0 transparent);
-  }
-
-  .robot-logo-container:hover .robot-logo {
-    filter: drop-shadow(0 0 8px rgba(126, 105, 171, 0.6));
-    transform: scale(1.1);
-  }
-
-  @keyframes robotBounce {
-    0% { transform: translateY(0) rotate(0deg) scale(1); }
-    25% { transform: translateY(-8px) rotate(-5deg) scale(1.05); }
-    50% { transform: translateY(-4px) rotate(3deg) scale(1.1); }
-    75% { transform: translateY(-6px) rotate(-2deg) scale(1.05); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
-  }
-
-  /* Add a subtle pulse effect for extra cuteness */
   .robot-logo-container:hover {
     animation: robotBounce 0.6s ease-in-out, robotPulse 2s ease-in-out infinite;
   }
 
+  .robot-logo {
+    transition: all 0.3s ease-in-out;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  .robot-logo-container:hover .robot-logo {
+    filter: drop-shadow(0 0 10px rgba(34,211,238,0.55));
+    transform: scale(1.1);
+  }
+
+  @keyframes robotBounce {
+    0%   { transform: translateY(0)   rotate(0deg)  scale(1);    }
+    25%  { transform: translateY(-8px) rotate(-5deg) scale(1.05); }
+    50%  { transform: translateY(-4px) rotate(3deg)  scale(1.1);  }
+    75%  { transform: translateY(-6px) rotate(-2deg) scale(1.05); }
+    100% { transform: translateY(0)   rotate(0deg)  scale(1);    }
+  }
+
   @keyframes robotPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
+    0%, 100% { transform: scale(1);    }
+    50%       { transform: scale(1.02); }
   }
 
-  .btn-hover-effect:after {
-    @apply content-[''] absolute inset-0 bg-white/0 transition-colors duration-300 pointer-events-none;
-  }
+  /* ─── Glow accents ───────────────────────────────────── */
+  .glow-cyan   { text-shadow: 0 0 18px rgba(34,211,238,0.65);  }
+  .glow-yellow { text-shadow: 0 0 18px rgba(251,191,36,0.65);  }
+  .glow-rose   { text-shadow: 0 0 18px rgba(244,63,142,0.60);  }
 
-  .btn-hover-effect:hover:after {
-    @apply bg-white/10;
+  /* ─── Accent badge colors for prompt types ──────────── */
+  .badge-system {
+    background: rgba(34,211,238,0.15);
+    color: #22d3ee;
+    border: 1px solid rgba(34,211,238,0.30);
+  }
+  .badge-task {
+    background: rgba(251,191,36,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.30);
+  }
+  .badge-image {
+    background: rgba(244,63,142,0.15);
+    color: #f43f8e;
+    border: 1px solid rgba(244,63,142,0.30);
+  }
+  .badge-video {
+    background: rgba(167,139,250,0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(167,139,250,0.30);
   }
 }

@@ -46,7 +46,21 @@ const TagInput = ({ tags, onAddTag, onRemoveTag }: TagInputProps) => {
         <Button
           type="button"
           onClick={handleAddTag}
-          className="px-2 bg-purple-700 hover:bg-purple-900"
+          className="px-2 transition-all duration-200"
+          style={{
+            background: "rgba(34,211,238,0.12)",
+            border: "1px solid rgba(34,211,238,0.35)",
+            color: "#22d3ee",
+            boxShadow: "0 0 10px rgba(34,211,238,0.12)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.32)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.12)";
+          }}
         >
           <Plus className="w-4 h-4" />
         </Button>
@@ -63,7 +77,7 @@ const TagInput = ({ tags, onAddTag, onRemoveTag }: TagInputProps) => {
               <button
                 type="button"
                 onClick={() => onRemoveTag(tag.id)}
-                className="text-purple-300 hover:text-white transition-colors"
+                className="text-cyan-300 hover:text-white transition-colors"
               >
                 <X className="w-3 h-3" />
               </button>

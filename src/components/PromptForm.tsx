@@ -127,8 +127,14 @@ const PromptForm = ({ isOpen, onClose, onSave, editingPrompt }: PromptFormProps)
               id="prompt"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Enter your prompt text here..."
-              className="min-h-[150px] bg-secondary/50 border-secondary"
+              placeholder="Enter your prompt text here…"
+              className="min-h-[150px] font-mono text-sm"
+              style={{
+                background: "rgba(0,0,0,0.25)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                color: "var(--text-strong)",
+                borderRadius: "12px",
+              }}
             />
           </div>
           <div className="space-y-2">
@@ -141,12 +147,42 @@ const PromptForm = ({ isOpen, onClose, onSave, editingPrompt }: PromptFormProps)
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            style={{
+              background: "rgba(244,63,142,0.10)",
+              border: "1px solid rgba(244,63,142,0.30)",
+              color: "#f43f8e",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.20)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(244,63,142,0.30)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.10)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+          >
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleSubmit}
-            className="bg-purple-500 hover:bg-purple-700"
+            className="font-bold"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+              border: "none",
+              color: "hsl(215,28%,9%)",
+              boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+            }}
           >
             {editingPrompt?.id ? "Update Prompt" : "Save Prompt"}
           </Button>

@@ -390,23 +390,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
 
 
-              <div className="space-y-4 border border-border p-4 rounded-md">
+              <div className="space-y-4 p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
                   <div className="flex items-center gap-2">
-                    <DatabaseIcon className="h-4 w-4 text-blue-500" />
-                    <h3 className="text-sm font-medium">Supabase Configuration</h3>
+                    <DatabaseIcon className="h-4 w-4" style={{ color: "var(--accent-cyan)" }} />
+                    <h3 className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>Supabase Configuration</h3>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Enter your Supabase project URL and anon key to connect to your own Supabase instance
                   </p>
 
-                  <div className="p-3 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md">
+                  <div className="p-3 rounded-xl" style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.20)" }}>
                     <div className="flex items-start gap-2">
                       <div className="text-blue-500 mt-0.5">ℹ️</div>
                       <div>
-                        <p className="text-xs text-blue-700 dark:text-blue-300 font-medium mb-1">
+                        <p className="text-xs font-medium mb-1" style={{ color: "var(--accent-cyan)" }}>
                           Important: Browser Refresh Required
                         </p>
-                        <p className="text-xs text-blue-600 dark:text-blue-400">
+                        <p className="text-xs" style={{ color: "var(--text-soft)" }}>
                           After connecting to Supabase, <strong>refresh the page</strong> to see your prompts appear.
                           This is especially important when switching browsers or using a new device.
                         </p>
@@ -443,7 +443,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         onChange={(e) => handleCustomUserIdChange(e.target.value)}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Current User ID: <span className="font-mono text-blue-600">{currentUserId || 'Loading...'}</span>
+                        Current User ID: <span className="font-mono" style={{ color: "var(--accent-cyan)" }}>{currentUserId || 'Loading...'}</span>
                       </p>
                       <p className="text-xs text-muted-foreground">
                         💡 Set a custom user ID to access your prompts from any browser. Leave empty for device-specific storage.
@@ -457,7 +457,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       size="sm"
                       onClick={handleTestConnection}
                       disabled={isConnectionTesting || !supabaseUrl || !supabaseKey}
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center transition-all duration-200"
+                      style={{
+                        background: "rgba(34,211,238,0.12)",
+                        border: "1px solid rgba(34,211,238,0.35)",
+                        color: "#22d3ee",
+                        boxShadow: "0 0 10px rgba(34,211,238,0.12)",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.32)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.12)";
+                      }}
                     >
                       {isConnectionTesting ? (
                         <>
@@ -477,7 +491,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        // Clear credentials and reset form
                         clearSupabaseCredentials();
                         setSupabaseUrl("");
                         setSupabaseKey("");
@@ -490,7 +503,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                           description: "Supabase credentials have been cleared. You can now enter new credentials."
                         });
                       }}
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center transition-all duration-200"
+                      style={{
+                        background: "rgba(251,191,36,0.12)",
+                        border: "1px solid rgba(251,191,36,0.35)",
+                        color: "#fbbf24",
+                        boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                      }}
                     >
                       <RefreshCw className="h-4 w-4" />
                       Reset
@@ -502,7 +529,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       size="sm"
                       onClick={handleDiagnoseConnection}
                       disabled={isDiagnosing || !supabaseUrl || !supabaseKey}
-                      className="flex gap-2 items-center"
+                      className="flex gap-2 items-center transition-all duration-200"
+                      style={{
+                        background: "rgba(244,63,142,0.12)",
+                        border: "1px solid rgba(244,63,142,0.35)",
+                        color: "#f43f8e",
+                        boxShadow: "0 0 10px rgba(244,63,142,0.12)",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.22)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(244,63,142,0.32)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(244,63,142,0.12)";
+                      }}
                     >
                       {isDiagnosing ? (
                         <>
@@ -535,7 +576,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   </div>
 
                 {showDiagnostics && diagnosticsData && (
-                  <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md">
+                  <div className="mt-4 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)" }}>
                     <div className="flex items-start gap-2 mb-2">
                       <div className="flex-1">
                         <h4 className="text-sm font-medium mb-2">Connection Diagnostics</h4>
@@ -596,8 +637,19 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full mt-2 text-xs"
+                      className="w-full mt-2 text-xs transition-all duration-200"
                       onClick={() => setShowDiagnostics(false)}
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.15)",
+                        color: "rgba(255,255,255,0.65)",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.10)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                      }}
                     >
                       Hide Diagnostics
                     </Button>
@@ -605,12 +657,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 )}
 
                 {showSqlSetup && (
-                  <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-md">
+                  <div className="mt-4 p-3 rounded-xl" style={{ background: "rgba(250,204,21,0.06)", border: "1px solid rgba(250,204,21,0.20)" }}>
                     <div className="flex items-start gap-2 mb-2">
                       <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
                       <div>
-                        <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300">Table Setup Required</h4>
-                        <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                        <h4 className="text-sm font-medium" style={{ color: "var(--accent-yellow)" }}>Table Setup Required</h4>
+                        <p className="text-xs mt-1" style={{ color: "var(--text-soft)" }}>
                           Your Supabase connection works, but you need to create the 'prompts' table manually in your Supabase SQL editor:
                         </p>
                       </div>
@@ -629,10 +681,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     </div>
 
                     <div className="mt-3 flex flex-col gap-2">
-                      <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                      <p className="text-xs font-medium" style={{ color: "var(--accent-yellow)" }}>
                         📋 Quick Setup Steps:
                       </p>
-                      <ol className="text-xs text-amber-700 dark:text-amber-400 list-decimal pl-4 space-y-1">
+                      <ol className="text-xs list-decimal pl-4 space-y-1" style={{ color: "var(--text-soft)" }}>
                         <li>Click the "Open SQL Editor" button below</li>
                         <li>Create a new query in the SQL Editor</li>
                         <li>Copy the SQL code above (click the copy button)</li>
@@ -645,7 +697,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex-1 h-8 text-xs flex items-center gap-1 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900 hover:bg-amber-200 dark:hover:bg-amber-800"
+                          className="flex-1 h-8 text-xs flex items-center gap-1 transition-all duration-200"
+                          style={{
+                            background: "rgba(251,191,36,0.12)",
+                            border: "1px solid rgba(251,191,36,0.35)",
+                            color: "#fbbf24",
+                            boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                          }}
+                          onMouseEnter={e => {
+                            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                          }}
+                          onMouseLeave={e => {
+                            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                          }}
                           onClick={openSupabaseSqlEditor}
                         >
                           <ExternalLink className="h-3 w-3" />
@@ -654,7 +720,21 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 text-xs flex items-center gap-1 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900 hover:bg-amber-200 dark:hover:bg-amber-800"
+                          className="h-8 text-xs flex items-center gap-1 transition-all duration-200"
+                          style={{
+                            background: "rgba(251,191,36,0.12)",
+                            border: "1px solid rgba(251,191,36,0.35)",
+                            color: "#fbbf24",
+                            boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                          }}
+                          onMouseEnter={e => {
+                            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                          }}
+                          onMouseLeave={e => {
+                            (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                          }}
                           onClick={handleCopySql}
                         >
                           <Copy className="h-3 w-3" />
@@ -662,9 +742,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         </Button>
                       </div>
 
-                      <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded text-xs">
-                        <p className="text-blue-700 dark:text-blue-300 font-medium mb-1">💡 Why manual setup?</p>
-                        <p className="text-blue-600 dark:text-blue-400">
+                      <div className="mt-2 p-2 rounded-lg text-xs" style={{ background: "rgba(34,211,238,0.06)", border: "1px solid rgba(34,211,238,0.15)" }}>
+                        <p className="font-medium mb-1" style={{ color: "var(--accent-cyan)" }}>💡 Why manual setup?</p>
+                        <p style={{ color: "var(--text-soft)" }}>
                           Supabase doesn't allow automatic table creation through the API for security reasons.
                           This one-time manual setup ensures your database is properly configured.
                         </p>
@@ -686,10 +766,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
             {/* Right Column - AI Assistant Configuration */}
             <div className="space-y-6">
-              <div className="space-y-4 border border-border p-4 rounded-md">
+              <div className="space-y-4 p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-purple-500" />
-                  <h3 className="text-sm font-medium">AI Assistant Configuration</h3>
+                  <Sparkles className="h-4 w-4" style={{ color: "var(--accent-rose)" }} />
+                  <h3 className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>AI Assistant Configuration</h3>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Customize the system prompt used by the AI Assistant to generate prompts
@@ -741,10 +821,44 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="transition-all duration-200"
+            style={{
+              background: "rgba(244,63,142,0.10)",
+              border: "1px solid rgba(244,63,142,0.30)",
+              color: "#f43f8e",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.20)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(244,63,142,0.30)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.10)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSave} className="bg-purple-500 hover:bg-purple-700">
+          <Button
+            onClick={handleSave}
+            className="font-bold transition-all duration-200"
+            style={{
+              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
+              border: "none",
+              color: "hsl(215,28%,9%)",
+              boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+            }}
+          >
             Save Changes
           </Button>
         </DialogFooter>

@@ -41,9 +41,9 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({ className = "" }) => {
       onMouseEnter={handleMouseEnter}
     >
       <img 
-        src="/favicon.png" 
+        src="/icon.png" 
         alt="Promptzy Robot Logo" 
-        className="robot-logo w-10 h-10 sm:w-12 sm:h-12 cursor-pointer select-none"
+        className="robot-logo w-18 h-18 sm:w-18 sm:h-18 cursor-pointer select-none"
         draggable={false}
       />
     </div>

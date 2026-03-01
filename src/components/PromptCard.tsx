@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Prompt } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Edit, Trash } from "lucide-react";
+import { ChevronDown, ChevronUp, Edit, Trash, Copy } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 interface PromptCardProps {
   prompt: Prompt;
@@ -12,13 +13,11 @@ interface PromptCardProps {
 
 export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
-  
-  // Ensure we always have a type value
+  const { toast } = useToast();
+
   const promptType = prompt.type || "task";
 
-  const toggleExpanded = () => {
-    setExpanded(!expanded);
-  };
+  const toggleExpanded = () => setExpanded(!expanded);
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -30,99 +29,117 @@ export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps
     onDelete(prompt.id);
   };
 
-  // Get the first line for preview
-  const firstLine = prompt.text.split('\n')[0];
-  const previewText = firstLine.length > 80 ? firstLine.substring(0, 80) + "..." : firstLine;
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(prompt.text);
+      toast({ title: "Copied!", description: "Prompt copied to clipboard." });
+    } catch {
+      toast({ title: "Copy failed", variant: "destructive" });
+    }
+  };
 
-  // Determine the prompt type display badge color
-  const typeColor = promptType === "system"
-    ? "bg-blue-600/20 text-blue-400 border-blue-800/50"
-    : promptType === "task"
-      ? "bg-amber-600/20 text-amber-400 border-amber-800/50"
-      : promptType === "image"
-        ? "bg-green-600/20 text-green-400 border-green-800/50"
-        : "bg-purple-600/20 text-purple-400 border-purple-800/50";
-    
+  const firstLine = prompt.text.split("\n")[0];
+  const previewText = firstLine.length > 90 ? firstLine.substring(0, 90) + "…" : firstLine;
+
+  // Badge class per type
+  const badgeClass =
+    promptType === "system" ? "badge-system"
+    : promptType === "task" ? "badge-task"
+    : promptType === "image" ? "badge-image"
+    : "badge-video";
+
+  const typeLabel =
+    promptType === "system" ? "SYSTEM"
+    : promptType === "task" ? "TASK"
+    : promptType === "image" ? "IMAGE"
+    : "VIDEO";
+
   return (
-    <div className="prompt-card rounded-xl overflow-hidden shadow-md animate-fade-in">
+    <div className="prompt-card overflow-hidden animate-fade-in">
       <div className="p-4 flex flex-col gap-2 btn-hover-effect">
-        {/* Add prompt type badge - always visible */}
-        <div className="flex items-center gap-2">
-          <div className={`px-2 py-0.5 text-xs font-medium rounded border ${typeColor}`}>
-            {promptType === "system"
-              ? "SYSTEM"
-              : promptType === "task"
-                ? "TASK"
-                : promptType === "image"
-                  ? "IMAGE"
-                  : "VIDEO"}
-          </div>
+        {/* Type badge row */}
+        <div className="flex items-center justify-between">
+          <span className={`${badgeClass} text-[10px] font-bold tracking-widest px-2.5 py-0.5 rounded-full uppercase`}>
+            {typeLabel}
+          </span>
+          <span className="text-[11px]" style={{ color: "var(--text-soft)" }}>
+            {formatDistanceToNow(new Date(prompt.createdAt), { addSuffix: true })}
+          </span>
         </div>
-        
-        <div className="flex justify-between items-start">
-          {/* Make the text area clickable for expansion */}
-          <div 
-            className="flex-1 overflow-hidden text-sm cursor-pointer" 
+
+        {/* Preview + actions */}
+        <div className="flex justify-between items-start gap-2">
+          <div
+            className="flex-1 overflow-hidden text-sm cursor-pointer"
             onClick={toggleExpanded}
           >
-            <div className="text-muted-foreground text-xs">
-              {formatDistanceToNow(new Date(prompt.createdAt), { addSuffix: true })}
-            </div>
-            <div className="font-medium mt-1 line-clamp-1">
+            <p className="font-medium leading-snug line-clamp-2" style={{ color: "var(--text-strong)" }}>
               {previewText}
-            </div>
+            </p>
           </div>
-          
-          <div className="flex items-center gap-2 ml-2">
-            {/* Edit button */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-secondary"
+
+          <div className="flex items-center gap-1 shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-white/40 hover:text-cyan-300 hover:bg-cyan-400/10 transition-colors"
+              onClick={handleCopy}
+              title="Copy prompt"
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-white/40 hover:text-yellow-300 hover:bg-yellow-400/10 transition-colors"
               onClick={handleEdit}
+              title="Edit prompt"
             >
-              <Edit className="h-4 w-4" />
+              <Edit className="h-3.5 w-3.5" />
             </Button>
-            
-            {/* Delete button */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-destructive/20"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-white/40 hover:text-rose-400 hover:bg-rose-400/10 transition-colors"
               onClick={handleDelete}
+              title="Delete prompt"
             >
-              <Trash className="h-4 w-4" />
+              <Trash className="h-3.5 w-3.5" />
             </Button>
-            
-            {/* Toggle button */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-secondary"
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleExpanded();
-              }}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+              onClick={(e) => { e.stopPropagation(); toggleExpanded(); }}
+              title={expanded ? "Collapse" : "Expand"}
             >
-              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {expanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
             </Button>
           </div>
         </div>
-        
+
+        {/* Tags */}
         {prompt.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-1">
+          <div className="flex flex-wrap gap-1.5 mt-1">
             {prompt.tags.map((tag) => (
-              <span key={tag.id} className="tag">
-                {tag.name}
-              </span>
+              <span key={tag.id} className="tag">{tag.name}</span>
             ))}
           </div>
         )}
       </div>
-      
+
+      {/* Expanded text */}
       {expanded && (
-        <div className="p-4 pt-0 border-t border-border/30 mt-2 animate-accordion-down">
-          <div className="bg-black/20 p-3 rounded-lg whitespace-pre-wrap text-sm">
+        <div className="px-4 pb-4 animate-accordion-down">
+          <div
+            className="p-3 rounded-xl whitespace-pre-wrap text-sm font-mono leading-relaxed"
+            style={{
+              background: "rgba(0,0,0,0.25)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              color: "var(--text-strong)",
+            }}
+          >
             {prompt.text}
           </div>
         </div>
