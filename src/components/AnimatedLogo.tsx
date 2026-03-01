@@ -43,7 +43,7 @@ const AnimatedLogo: React.FC<AnimatedLogoProps> = ({ className = "" }) => {
       <img 
         src="/icon.png" 
         alt="Promptzy Robot Logo" 
-        className="robot-logo w-18 h-18 sm:w-18 sm:h-18 cursor-pointer select-none"
+        className="robot-logo w-20 h-20 sm:w-20 sm:h-20 cursor-pointer select-none"
         draggable={false}
       />
     </div>

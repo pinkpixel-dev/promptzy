@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <header className="glass glass__bar rounded-2xl px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
+    <header className="glass glass__bar rounded-1xl px-5 py-4 mt-2 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
       <div className="flex items-center gap-3">
         <AnimatedLogo />
         <div className="flex flex-col leading-tight">
