@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { getSystemPrompt } from "@/lib/systemPromptStore";
+import ShinyButton from "@/components/ShinyButton";
 
 interface AIAssistantProps {
   onUsePrompt: (text: string, promptType: "system" | "task" | "image" | "video") => void;
@@ -289,7 +290,7 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
         onOpenChange={setIsOpen}
         className="rounded-2xl shadow-2xl overflow-hidden"
         style={{
-          background: "linear-gradient(180deg, rgba(13,20,33,0.92) 0%, rgba(10,16,28,0.95) 100%)",
+          background: "rgba(10,16,28,0.95)",
           backdropFilter: "saturate(180%) blur(24px)",
           WebkitBackdropFilter: "saturate(180%) blur(24px)",
           border: "1px solid rgba(34,211,238,0.22)",
@@ -297,22 +298,16 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
         }}
       >
         <CollapsibleTrigger asChild>
-          <Button
-            className="w-full flex items-center justify-between p-4 rounded-t-2xl transition-all duration-200"
-            style={{
-              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
-              color: "hsl(215,28%,9%)",
-              border: "none",
-              fontWeight: "700",
-              boxShadow: "0 0 20px rgba(34,211,238,0.35), 0 0 36px rgba(251,191,36,0.18)",
-            }}
+          <ShinyButton
+            hex="#22d3ee"
+            className="w-full rounded-t-2xl rounded-b-none"
           >
             <div className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
               <span>AI Prompt Assistant</span>
             </div>
             {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-          </Button>
+          </ShinyButton>
         </CollapsibleTrigger>
         <CollapsibleContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
           <div className="space-y-2">
@@ -376,29 +371,14 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
             />
           </div>
 
-          <Button
+          <ShinyButton
             onClick={handleGeneratePrompt}
             disabled={response.loading || !prompt.trim()}
-            className="w-full font-bold"
-            style={{
-              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
-              border: "none",
-              color: "hsl(215,28%,9%)",
-              boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
-            }}
-            onMouseEnter={e => {
-              if (!response.loading && prompt.trim()) {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-              }
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-            }}
+            hex="#fbbf24"
+            className="w-full"
           >
             {response.loading ? "Generating..." : "Generate Prompt"}
-          </Button>
+          </ShinyButton>
 
           {response.text && (
             <div className="space-y-2 sm:space-y-3">
@@ -434,26 +414,14 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
                 >
                   <Copy className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Copy
                 </Button>
-                <Button
-                  className="flex-1 font-bold text-xs sm:text-sm transition-all duration-200"
+                <ShinyButton
                   onClick={handleUsePrompt}
-                  style={{
-                    background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
-                    border: "none",
-                    color: "hsl(215,28%,9%)",
-                    boxShadow: "0 0 18px rgba(34,211,238,0.38), 0 0 32px rgba(251,191,36,0.18)",
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 26px rgba(34,211,238,0.52), 0 0 46px rgba(251,191,36,0.28)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.38), 0 0 32px rgba(251,191,36,0.18)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  }}
+                  hex="#f43f8e"
+                  size="sm"
+                  className="flex-1"
                 >
                   Use as Prompt
-                </Button>
+                </ShinyButton>
               </div>
             </div>
           )}

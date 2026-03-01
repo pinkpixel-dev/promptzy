@@ -7,6 +7,7 @@ import TagInput from "./TagInput";
 import { Prompt, Tag } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import ShinyButton from "@/components/ShinyButton";
 
 interface PromptFormProps {
   isOpen: boolean;
@@ -166,26 +167,12 @@ const PromptForm = ({ isOpen, onClose, onSave, editingPrompt }: PromptFormProps)
           >
             Cancel
           </Button>
-          <Button
+          <ShinyButton
             onClick={handleSubmit}
-            className="font-bold"
-            style={{
-              background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
-              border: "none",
-              color: "hsl(215,28%,9%)",
-              boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-            }}
+            hex="#fbbf24"
           >
             {editingPrompt?.id ? "Update Prompt" : "Save Prompt"}
-          </Button>
+          </ShinyButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

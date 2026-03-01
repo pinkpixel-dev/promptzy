@@ -6,6 +6,7 @@ import PromptCard from "@/components/PromptCard";
 import EmptyState from "@/components/EmptyState";
 import PromptForm from "@/components/PromptForm";
 import AIAssistant from "@/components/AIAssistant";
+import ShinyButton from "@/components/ShinyButton";
 import { Prompt, Tag } from "@/types";
 import { getPromptsFromSupabase, savePromptToSupabase, deletePromptFromSupabase, testSupabaseConnection } from "@/lib/supabasePromptStore";
 import { useToast } from "@/hooks/use-toast";
@@ -428,16 +429,13 @@ const Index = () => {
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
-              <AlertDialogAction
+              <ShinyButton
                 onClick={confirmDelete}
-                style={{
-                  background: "linear-gradient(135deg, rgba(251,113,133,0.85) 0%, rgba(34,211,238,0.70) 100%)",
-                  color: "hsl(215,28%,9%)",
-                  border: "1px solid rgba(251,113,133,0.30)",
-                }}
+                hex="#f43f8e"
+                size="sm"
               >
                 Delete
-              </AlertDialogAction>
+              </ShinyButton>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

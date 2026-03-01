@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus, Sparkles } from "lucide-react";
+import ShinyButton from "@/components/ShinyButton";
 
 interface EmptyStateProps {
   onAddPrompt: () => void;
@@ -39,27 +40,13 @@ const EmptyState = ({ onAddPrompt, isFiltered }: EmptyStateProps) => {
       </p>
 
       {!isFiltered && (
-        <Button
+        <ShinyButton
           onClick={onAddPrompt}
-          className="font-bold transition-all duration-200"
-          style={{
-            background: "linear-gradient(135deg, #22d3ee 0%, #fbbf24 50%, #f43f8e 100%)",
-            border: "none",
-            color: "hsl(215,28%,9%)",
-            boxShadow: "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)",
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(34,211,238,0.55), 0 0 50px rgba(251,191,36,0.30), 0 4px 12px rgba(0,0,0,0.45)";
-            (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.40), 0 0 40px rgba(251,191,36,0.20), 0 2px 8px rgba(0,0,0,0.40)";
-            (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-          }}
+          hex="#f43f8e"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add your first prompt
-        </Button>
+        </ShinyButton>
       )}
     </div>
   );
