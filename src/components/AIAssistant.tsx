@@ -290,11 +290,11 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
         onOpenChange={setIsOpen}
         className="rounded-2xl shadow-2xl overflow-hidden"
         style={{
-          background: "rgba(10,16,28,0.95)",
+          background: "rgba(9,9,11,0.97)",
           backdropFilter: "saturate(180%) blur(24px)",
           WebkitBackdropFilter: "saturate(180%) blur(24px)",
-          border: "1px solid rgba(34,211,238,0.22)",
-          boxShadow: "0 12px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 40px rgba(34,211,238,0.08)",
+          border: "1px solid rgba(63,63,70,0.50)",
+          boxShadow: "0 12px 48px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
         <CollapsibleTrigger asChild>
@@ -361,7 +361,7 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
               }
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="min-h-[60px] sm:min-h-[80px] text-xs sm:text-sm"
+              className="min-h-[140px] sm:min-h-[160px] text-xs sm:text-sm"
               style={{
                 background: "rgba(0,0,0,0.25)",
                 border: "1px solid rgba(255,255,255,0.09)",

@@ -221,62 +221,79 @@
     z-index: 1;
   }
 
-  /* ─── Glass utility ─────────────────────────────────── */
+  /* ─── Glass utility (SugarCard-plate style, no hover glow) */
   .glass {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%);
-    backdrop-filter: saturate(180%) blur(var(--glass-blur));
-    -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      var(--glass-shadow),
-      inset 0 0 60px rgba(255,255,255,0.04);
-    border-radius: 16px;
+    position: relative;
+    border-radius: 24px;
+    background: rgba(63,63,70,0.50);
+    padding: 1px;
+    overflow: hidden;
+  }
+
+  .glass > * {
     position: relative;
   }
 
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: rgba(9,9,11,0.90);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
   .glass--dense {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.12) 100%);
+    background: rgba(63,63,70,0.65);
   }
 
   .glass--light {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+    background: rgba(63,63,70,0.35);
   }
 
   /* Titlebar strip inside glass panels */
   .glass__bar {
-    background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.08) 100%);
-    border-bottom: 1px solid var(--glass-border);
+    background: rgba(63,63,70,0.50);
+    border-bottom: 1px solid rgba(63,63,70,0.40);
   }
 
-  /* ─── Prompt card ────────────────────────────────────── */
+  /* ─── Prompt card (SugarCard style) ──────────────────── */
   .prompt-card {
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.07) 100%);
-    backdrop-filter: saturate(180%) blur(var(--glass-blur));
-    -webkit-backdrop-filter: saturate(180%) blur(var(--glass-blur));
-    border: 1px solid var(--glass-border);
-    box-shadow:
-      var(--glass-shadow),
-      inset 0 0 40px rgba(255,255,255,0.03);
-    border-radius: 16px;
-    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    position: relative;
+    border-radius: 24px;
+    background: rgba(63,63,70,0.50);
+    padding: 1px;
+    overflow: hidden;
+    transition: box-shadow 0.5s ease-out, transform 0.3s;
   }
 
   .prompt-card:hover {
-    border-color: rgba(34,211,238,0.50);
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.09) 100%);
-    box-shadow:
-      0 16px 48px rgba(0,0,0,0.60),
-      0 0 0 1px rgba(34,211,238,0.25),
-      0 0 30px rgba(34,211,238,0.12),
-      0 0 60px rgba(251,191,36,0.06),
-      inset 0 1px 0 rgba(255,255,255,0.25),
-      inset 0 0 40px rgba(255,255,255,0.04);
     transform: translateY(-3px);
+  }
+
+  /* Top glow border — color set via inline --card-hex */
+  .prompt-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.4;
+    transition: opacity 0.5s;
+    background: radial-gradient(800px circle at 50% 0%, var(--card-hex, rgba(34,211,238,0.5)), transparent 40%);
+    pointer-events: none;
+  }
+  .prompt-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Inner content plate */
+  .prompt-card-inner {
+    position: relative;
+    height: 100%;
+    background: rgba(9,9,11,0.90);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 23px;
   }
 
   /* ─── Tags ───────────────────────────────────────────── */
@@ -324,20 +341,27 @@
   /* ─── Robot Logo Animations ──────────────────────────── */
   .robot-logo-container {
     transition: transform 0.3s ease-in-out;
+    animation: robotFloat 3s ease-in-out infinite;
   }
 
   .robot-logo-container:hover {
-    animation: robotBounce 0.6s ease-in-out, robotPulse 2s ease-in-out infinite;
+    animation: robotBounce 0.6s ease-in-out, robotFloat 3s ease-in-out infinite;
   }
 
   .robot-logo {
     transition: all 0.3s ease-in-out;
-    filter: drop-shadow(0 0 0 transparent);
+    filter: drop-shadow(0 0 6px rgba(34,211,238,0.25));
   }
 
   .robot-logo-container:hover .robot-logo {
-    filter: drop-shadow(0 0 10px rgba(34,211,238,0.55));
+    filter: drop-shadow(0 0 12px rgba(34,211,238,0.55));
     transform: scale(1.1);
+  }
+
+  @keyframes robotFloat {
+    0%   { transform: translateY(0);    }
+    50%  { transform: translateY(-4px); }
+    100% { transform: translateY(0);    }
   }
 
   @keyframes robotBounce {
@@ -346,11 +370,6 @@
     50%  { transform: translateY(-4px) rotate(3deg)  scale(1.1);  }
     75%  { transform: translateY(-6px) rotate(-2deg) scale(1.05); }
     100% { transform: translateY(0)   rotate(0deg)  scale(1);    }
-  }
-
-  @keyframes robotPulse {
-    0%, 100% { transform: scale(1);    }
-    50%       { transform: scale(1.02); }
   }
 
   /* ─── Glow accents ───────────────────────────────────── */

@@ -17,6 +17,15 @@ export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps
 
   const promptType = prompt.type || "task";
 
+  // Color per prompt type — video gets white glow
+  const typeHex: Record<string, string> =  {
+    system: "#22d3ee",
+    task: "#fbbf24",
+    image: "#f43f8e",
+    video: "#e4e4e7",
+  };
+  const hex = typeHex[promptType] || typeHex.task;
+
   const toggleExpanded = () => setExpanded(!expanded);
 
   const handleEdit = (e: React.MouseEvent) => {
@@ -56,8 +65,17 @@ export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps
     : "VIDEO";
 
   return (
-    <div className="prompt-card overflow-hidden animate-fade-in">
-      <div className="p-4 flex flex-col gap-2 btn-hover-effect">
+    <div
+      className="prompt-card animate-fade-in"
+      style={{
+        "--card-hex": `${hex}80`,
+        boxShadow: `0 0 0 0 ${hex}00`,
+      } as React.CSSProperties}
+      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 10px 40px -10px ${hex}40`; }}
+      onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `0 0 0 0 ${hex}00`; }}
+    >
+      <div className="prompt-card-inner">
+        <div className="p-4 flex flex-col gap-2">
         {/* Type badge row */}
         <div className="flex items-center justify-between">
           <span className={`${badgeClass} text-[10px] font-bold tracking-widest px-2.5 py-0.5 rounded-full uppercase`}>
@@ -144,6 +162,7 @@ export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps
           </div>
         </div>
       )}
+      </div>{/* end prompt-card-inner */}
     </div>
   );
 }

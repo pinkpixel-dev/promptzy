@@ -92,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
           className="flex-1 sm:flex-none"
         >
           <Plus className="h-4 w-4" />
-          <span className="hidden xs:inline">Add Prompt</span>
+          Add Prompt
         </ShinyButton>
       </div>
 
