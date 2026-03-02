@@ -131,7 +131,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     if (supabaseKey.length < 20) {
       toast({
         title: "Invalid Key Format",
-        description: "The Supabase key appears to be too short. Please check your anon key.",
+        description: "The Supabase key appears to be too short. Please check your API key (publishable or anon JWT).",
         variant: "destructive"
       });
       return;
@@ -316,7 +316,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       if (supabaseKey.length < 20) {
         toast({
           title: "Invalid Key Format",
-          description: "The Supabase key appears to be too short. Please check your anon key.",
+          description: "The Supabase key appears to be too short. Please check your API key (publishable or anon JWT).",
           variant: "destructive"
         });
         return;
@@ -430,7 +430,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <h3 className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>Supabase Configuration</h3>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Enter your Supabase project URL and anon key to connect to your own Supabase instance
+                    Enter your Supabase project URL and API key to connect to your own Supabase instance
                   </p>
 
                   <div className="p-3 rounded-xl" style={{ background: "rgba(34,211,238,0.07)", border: "1px solid rgba(34,211,238,0.20)" }}>
@@ -459,14 +459,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       />
                     </div>
                     <div className="space-y-1">
-                      <Label htmlFor="supabase-key">Supabase Anon Key</Label>
+                      <Label htmlFor="supabase-key">Supabase API Key</Label>
                       <Input
                         id="supabase-key"
                         type="password"
-                        placeholder="your-anon-key"
+                        placeholder="sb_publishable_… or eyJ… (anon JWT)"
                         value={supabaseKey}
                         onChange={(e) => setSupabaseKey(e.target.value)}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Use your <strong>publishable key</strong> (<code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>sb_publishable_…</code>) — the modern format recommended by Supabase. Legacy <strong>anon JWT</strong> keys are also accepted.
+                      </p>
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="custom-user-id">Custom User ID (Optional)</Label>
@@ -792,7 +795,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     <ol className="list-decimal pl-4 space-y-1">
                       <li>Go to your Supabase project dashboard</li>
                       <li>Navigate to Project Settings → API</li>
-                      <li>Copy the "Project URL" and "anon" public API key</li>
+                      <li>Copy the <strong>Project URL</strong> and your <strong>publishable key</strong> (<code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>sb_publishable_…</code>) or legacy <strong>anon</strong> JWT key</li>
                     </ol>
                   </div>
                 </div>
@@ -1001,7 +1004,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <ol className="text-xs pl-7 space-y-1 list-decimal list-inside" style={{ color: "var(--text-soft)" }}>
               <li>In your Supabase project dashboard, go to <strong>Project Settings → API</strong></li>
               <li>Copy the <strong>Project URL</strong> (e.g. <code className="text-xs px-1 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>https://xyz.supabase.co</code>)</li>
-              <li>Copy the <strong>anon / public</strong> API key (not the service role key)</li>
+              <li>Copy the <strong>publishable key</strong> (<code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>sb_publishable_…</code>) or the legacy <strong>anon</strong> JWT key — both work</li>
               <li>Paste both into the Supabase Configuration fields on the left</li>
             </ol>
           </div>
@@ -1051,7 +1054,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               Connect and save
             </h4>
             <p className="text-xs pl-7" style={{ color: "var(--text-soft)" }}>
-              Back in this settings panel, enter your URL and anon key, click <strong>Connect</strong> to verify, then click <strong>Save Changes</strong>. Refresh the page and you're all set!
+              Back in this settings panel, enter your URL and API key, click <strong>Connect</strong> to verify, then click <strong>Save Changes</strong>. Refresh the page and you're all set!
             </p>
           </div>
 
