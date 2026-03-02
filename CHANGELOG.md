@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **🧠 Model Selection:** Added configurable model field in Settings (default: `gemini-fast` — Google Gemini 2.5 Flash Lite); any Pollinations text model can be specified
 - **⚙️ Settings UI:** Added "Pollinations API Key" and "AI Model" inputs to the AI Assistant Configuration section in Settings — no environment variables needed
 - **🧹 Cleanup:** Removed all legacy debug `console.log` calls from the AI streaming flow; removed unused `top_p` / `private` query params
+- **🗝️ Supabase Key Support:** Settings now accepts both the new Supabase publishable key (`sb_publishable_…`) and the legacy anon JWT — label, placeholder, and hint text updated throughout
 
 ### Fixed
 
