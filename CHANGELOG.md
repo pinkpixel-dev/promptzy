@@ -5,6 +5,20 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.3] - 2026-03-02
+
+### Added
+
+- **📚 Documentation Site:** Full Starlight (Astro) docs site in `/website`, deployed to [promptzy-docs.pinkpixel.dev](https://promptzy-docs.pinkpixel.dev)
+  - Installation guide covering PWA, npm (`promptzy` command), Docker (all modes), Linux desktop app, and clone-from-source
+  - Supabase setup walkthrough with full SQL schema and step-by-step configuration
+  - AI Assistant guide covering Pollinations API key setup, model selection, and technical details
+  - Prompt Engineering guide with best practices for System, Task, Image, and Video prompts
+  - 12 ready-to-use prompt templates (system personas, task prompts, image/video prompts)
+  - Dark glassy theme: deep navy + rose pink + cyan + amber matching the app's palette
+  - Wrangler-ready for Cloudflare Pages deployment (`wrangler.toml` included)
+- **🔗 Docs Link in Header:** New "Docs" button in the app header (rose-pink accent) linking to the docs site
+
 ## [1.4.2] - 2026-03-01
 
 ### Added

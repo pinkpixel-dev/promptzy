@@ -9,7 +9,7 @@
 <div align="center">
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.4.2-green.svg)
+![Version](https://img.shields.io/badge/version-1.4.3-green.svg)
 ![NPM](https://img.shields.io/npm/v/@pinkpixel/promptzy?color=red)
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)
@@ -35,6 +35,7 @@
 - **Progressive Web App (PWA)**: Install as a mobile app directly from your browser
 - **Desktop App**: Native Electron app for Linux (more platforms coming)
 - **Docker**: Run anywhere with a single `docker compose up` command
+- **Documentation**: Full docs site at [promptzy-docs.pinkpixel.dev](https://promptzy-docs.pinkpixel.dev)
 - **Modern UI**: Clean, responsive interface built with Shadcn/UI and Tailwind
 
 ## 🖥️ Screenshots

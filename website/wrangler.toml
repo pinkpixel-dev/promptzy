@@ -1,0 +1,6 @@
+name = "promptzy-docs"
+compatibility_date = "2026-03-02"
+pages_build_output_dir = "dist"
+
+[vars]
+ENVIRONMENT = "production"

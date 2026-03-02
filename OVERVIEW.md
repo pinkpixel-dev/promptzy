@@ -1,6 +1,6 @@
 # ✨ Promptzy 🎯
 
-**Last Updated:** 2026-03-01
+**Last Updated:** 2026-03-02
 
 ## Project Overview
 
@@ -8,6 +8,7 @@
 
 ## ✨ Key Features
 
+- **Documentation Site:** Full Starlight/Astro docs site at [promptzy-docs.pinkpixel.dev](https://promptzy-docs.pinkpixel.dev) — installation guides, Supabase setup, AI assistant configuration, prompt engineering guide, and 12 ready-to-use prompt templates
 - **Prompt Management:** Create, edit, view, and delete AI prompts with UUID support
 - **Prompt Types:** Support for system, task, image, and video prompts with type-specific badges
 - **Tagging System:** Organize prompts with customizable tags and visual tag chips

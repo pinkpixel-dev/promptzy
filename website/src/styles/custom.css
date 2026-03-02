@@ -82,7 +82,7 @@ a[aria-current='page'] {
 
 /* ── Logo ─────────────────────────────────────────────────── */
 .site-title img {
-  height: 30px;
+  height: 48px;
   width: auto;
 }
 
@@ -279,6 +279,12 @@ tbody tr:hover {
 .sl-badge {
   font-weight: 600;
   border-radius: 999px;
+}
+
+/* ── Hide theme switcher ──────────────────────────────────── */
+starlight-theme-select,
+[data-theme-toggle] {
+  display: none !important;
 }
 
 /* ── Scrollbar ────────────────────────────────────────────── */

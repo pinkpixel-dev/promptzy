@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, Settings, RefreshCw } from "lucide-react";
+import { Plus, Settings, RefreshCw, BookOpen } from "lucide-react";
 import SettingsDialog from "@/components/SettingsDialog";
 import AnimatedLogo from "@/components/AnimatedLogo";
 import ShinyButton from "@/components/ShinyButton";
@@ -59,6 +59,31 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
         >
           <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
           <span className="hidden xs:inline">{isRefreshing ? "Refreshing…" : "Refresh"}</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => window.open('https://promptzy-docs.pinkpixel.dev', '_blank', 'noopener,noreferrer')}
+          className="flex items-center gap-1.5 flex-1 sm:flex-none transition-all duration-200"
+          title="Documentation"
+          style={{
+            background: "rgba(244,63,142,0.12)",
+            border: "1px solid rgba(244,63,142,0.35)",
+            color: "#f43f8e",
+            boxShadow: "0 0 12px rgba(244,63,142,0.15)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.22)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(244,63,142,0.35)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.12)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(244,63,142,0.15)";
+          }}
+        >
+          <BookOpen className="h-4 w-4" />
+          <span className="hidden xs:inline">Docs</span>
         </Button>
 
         <Button

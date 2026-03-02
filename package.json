@@ -1,6 +1,6 @@
 {
   "name": "@pinkpixel/promptzy",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Promptzy - A modern, cute web application for managing and organizing your AI prompts, with tagging, search, and cloud storage.",
   "type": "module",
   "main": "dist/index.html",
