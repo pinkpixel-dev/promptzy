@@ -1,4 +1,4 @@
-Here's a full breakdown of the Promptzy project:
+Full breakdown of the Promptzy project:
 
 ---
 
