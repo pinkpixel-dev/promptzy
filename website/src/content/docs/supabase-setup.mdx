@@ -1,0 +1,137 @@
+---
+title: Supabase Setup
+description: Connect Promptzy to your free Supabase database for cross-device cloud sync.
+---
+
+import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
+
+Promptzy uses [Supabase](https://supabase.com) for cloud storage, giving you a private, synced prompt library accessible from any device. Supabase has a **generous free tier** — no credit card required.
+
+---
+
+## Create a Supabase Project
+
+<Steps>
+
+1. **Create an account** at [supabase.com](https://supabase.com) and sign in.
+
+2. **Create a new project.** Pick a name, set a database password, and choose a region close to you.
+
+3. **Get your credentials.** Once the project is ready, you'll need two values:
+   - **Project URL** — looks like `https://xxxx.supabase.co`
+   - **Anon key** — a long `eyJ...` JWT string
+
+   Find these at **Project Settings → API** in your Supabase dashboard, or click the **Connect** button at the top of the project page and go to the **App Frameworks** tab.
+
+</Steps>
+
+---
+
+## Configure Promptzy
+
+<Steps>
+
+1. Open Promptzy and click the **Settings** icon (⚙️) in the header.
+
+2. Under **Storage**, select **Supabase**.
+
+3. Enter your **Project URL** and **Anon Key**, then click **Connect**.
+
+4. You'll see a prompt to create the required database table — continue to the next section.
+
+</Steps>
+
+---
+
+## Create the Database Table
+
+Supabase doesn't allow apps to auto-create tables for security reasons, so this one-time setup is done manually in the SQL Editor.
+
+<Steps>
+
+1. In the Settings dialog, click **Open SQL Editor** — this opens your Supabase SQL Editor in a new tab.
+
+2. Paste the following SQL and click **Run**:
+
+   ```sql
+   -- Create the prompts table
+   CREATE TABLE IF NOT EXISTS prompts (
+     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     content     TEXT NOT NULL,
+     title       TEXT NOT NULL,
+     tags        TEXT[] DEFAULT '{}',
+     category    TEXT DEFAULT 'task',
+     description TEXT DEFAULT '',
+     user_id     TEXT NOT NULL,
+     createdat   TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     ispublic    BOOLEAN DEFAULT false,
+     likes       INTEGER DEFAULT 0,
+     views       INTEGER DEFAULT 0,
+     comments    INTEGER DEFAULT 0
+   );
+
+   -- Indexes for performance
+   CREATE INDEX IF NOT EXISTS idx_prompts_user_id  ON prompts(user_id);
+   CREATE INDEX IF NOT EXISTS idx_prompts_createdat ON prompts(createdat);
+   CREATE INDEX IF NOT EXISTS idx_prompts_tags     ON prompts USING GIN(tags);
+
+   -- Enable Row Level Security
+   ALTER TABLE prompts ENABLE ROW LEVEL SECURITY;
+
+   -- Permissive policy (allows all operations — restrict later if needed)
+   DROP POLICY IF EXISTS "Allow all operations for now" ON prompts;
+   CREATE POLICY "Allow all operations for now" ON prompts FOR ALL USING (true);
+   ```
+
+   <Aside type="tip">
+     The full setup script is also available in the repository at
+     [`supabase-setup.sql`](https://github.com/pinkpixel-dev/promptzy/blob/main/supabase-setup.sql).
+   </Aside>
+
+3. Return to Promptzy, click **Connect** again to verify the table was created, then **Save Changes**.
+
+4. Click the **Refresh** button (🔄) in the Promptzy header to load your prompts.
+
+</Steps>
+
+<Aside type="note">
+  You only need to do this setup once per browser. After the initial setup, your
+  credentials are saved to `localStorage` and reconnect automatically on every
+  visit.
+</Aside>
+
+---
+
+## Environment Variables (optional)
+
+If you're running Promptzy via Docker or building from source, you can pre-configure credentials as environment variables so they're available on first launch:
+
+```bash
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+These take precedence over any credentials entered in the Settings dialog.
+
+---
+
+## How User Identity Works
+
+Promptzy isolates your prompts by a **user ID** resolved in this order:
+
+1. Supabase auth session (if you sign in)
+2. `custom-user-id` stored in `localStorage`
+3. An auto-generated anonymous ID (created on first run)
+
+This means your prompts are private to your browser/device by default — no account creation required.
+
+---
+
+## Troubleshooting
+
+| Problem                           | Fix                                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------ |
+| "Cannot connect to Supabase"      | Double-check your Project URL and Anon Key — paste them fresh from the Supabase dashboard. |
+| Prompts not loading after setup   | Hit the **Refresh** button (🔄) in the Promptzy header.                                    |
+| "Table does not exist" error      | Run the SQL setup script in the Supabase SQL Editor (see above).                           |
+| Prompts missing on another device | Ensure you're using the same credentials on both devices.                                  |

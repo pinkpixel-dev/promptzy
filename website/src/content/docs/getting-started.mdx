@@ -1,0 +1,225 @@
+---
+title: Installation
+description: Install Promptzy via npm, Docker, Linux desktop app, PWA, or build from source.
+---
+
+import {
+  Tabs,
+  TabItem,
+  Steps,
+  Aside,
+  Card,
+  CardGrid,
+} from "@astrojs/starlight/components";
+
+Promptzy is available in several forms — pick the one that fits your workflow.
+
+<CardGrid>
+  <Card title="Web App (PWA)" icon="laptop">
+    Best for most users. Install directly from your browser — no app store
+    needed.
+  </Card>
+  <Card title="npm Package" icon="seti:npm">
+    Run Promptzy locally in seconds with a single global install.
+  </Card>
+  <Card title="Docker" icon="seti:docker">
+    Self-host anywhere with a single `docker compose up` command.
+  </Card>
+  <Card title="Linux Desktop" icon="linux">
+    Native Electron app — `.deb` or `.AppImage` for Linux.
+  </Card>
+</CardGrid>
+
+---
+
+## Web App (PWA)
+
+The easiest way to use Promptzy is at **[promptzy.pinkpixel.dev](https://promptzy.pinkpixel.dev)** — no installation required. You can also install it as a Progressive Web App for a native-like experience.
+
+**On mobile (iOS / Android):**
+
+1. Open [promptzy.pinkpixel.dev](https://promptzy.pinkpixel.dev) in your browser.
+2. Tap the share / menu icon and choose **"Add to Home Screen"** or **"Install App"**.
+3. Promptzy will appear on your home screen like a native app.
+
+**On Desktop (Chrome / Edge):**
+
+1. Visit [promptzy.pinkpixel.dev](https://promptzy.pinkpixel.dev).
+2. Click the **install icon** (⊕) in the browser address bar.
+3. Click **Install** — done!
+
+<Aside type="tip">
+  PWA benefits include offline capability, faster load times, and automatic
+  updates whenever a new version ships.
+</Aside>
+
+---
+
+## npm (Global Install)
+
+<Steps>
+
+1. **Install globally:**
+
+   ```bash
+   npm install -g @pinkpixel/promptzy
+   ```
+
+2. **Launch Promptzy:**
+
+   ```bash
+   promptzy
+   ```
+
+   Promptzy starts on **http://localhost:4173** and opens in your browser automatically.
+
+</Steps>
+
+**No installation needed (run with npx):**
+
+```bash
+npx @pinkpixel/promptzy
+```
+
+**Legacy commands** (still work from older versions):
+
+```bash
+prompt-dashboard
+ai-prompt-dashboard
+```
+
+---
+
+## Docker
+
+Run Promptzy as a self-hosted web app in a container.
+
+<Tabs>
+  <TabItem label="Quick Start">
+    ```bash
+    git clone https://github.com/pinkpixel-dev/promptzy.git
+    cd promptzy
+    docker compose up --build
+    ```
+
+    Promptzy is now available at **http://localhost:3000**.
+
+  </TabItem>
+  <TabItem label="With Credentials">
+    Bake your Supabase and Pollinations credentials into the image so they're pre-filled on first launch:
+
+    ```bash
+    VITE_SUPABASE_URL=https://xxxx.supabase.co \
+    VITE_SUPABASE_ANON_KEY=your_anon_key \
+    VITE_POLLINATIONS_API_KEY=pk_your_key \
+    docker compose up --build
+    ```
+
+    <Aside type="note">
+    You can always configure credentials at runtime via the in-app **Settings** dialog — no rebuild needed.
+    </Aside>
+
+  </TabItem>
+  <TabItem label="Manual Build & Run">
+    ```bash
+    # Build the image
+    npm run docker:build
+    # docker build -t promptzy .
+
+    # Run the container
+    npm run docker:run
+    # docker run --rm -p 3000:80 promptzy
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Linux Desktop App
+
+Native Electron app for Linux — no browser required.
+
+| Package                | Format      | Download                                                                                                 |
+| ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb) |
+| Universal Linux        | `.AppImage` | [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)   |
+
+<Tabs>
+  <TabItem label=".deb (Ubuntu / Debian)">
+    ```bash
+    wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb
+    sudo dpkg -i Promptzy-1.4.1-amd64.deb
+    ```
+
+    Launch **Promptzy** from your application menu or run `promptzy` in the terminal.
+
+  </TabItem>
+  <TabItem label=".AppImage (Universal)">
+    ```bash
+    wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage
+    chmod +x Promptzy-1.4.1.AppImage
+    ./Promptzy-1.4.1.AppImage
+    ```
+
+    No installation needed — the AppImage runs anywhere.
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Build from Source
+
+Clone the repository and run the development server or build for production.
+
+<Steps>
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/pinkpixel-dev/promptzy.git
+   cd promptzy
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+   The app is now available at **http://localhost:8080**.
+
+4. **Build for production (optional):**
+
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+</Steps>
+
+<Aside type="note">
+  You can also use `bun install` / `bun run dev` or `yarn install` / `yarn dev`
+  instead of npm.
+</Aside>
+
+---
+
+## Next Steps
+
+Once Promptzy is running, connect it to your Supabase database for cloud sync:
+
+import { LinkCard } from "@astrojs/starlight/components";
+
+<LinkCard
+  title="Supabase Setup →"
+  href="/supabase-setup/"
+  description="Set up your free cloud database and start syncing prompts."
+/>

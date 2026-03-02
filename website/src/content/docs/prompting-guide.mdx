@@ -1,0 +1,212 @@
+---
+title: Prompt Engineering
+description: Learn how to write effective prompts for system instructions, tasks, image generation, and video.
+---
+
+import { Aside, Card, CardGrid } from "@astrojs/starlight/components";
+
+Writing good prompts is the difference between a vague, mediocre response and a precise, powerful one. This guide covers the core principles and practical techniques for each type of prompt that Promptzy supports.
+
+---
+
+## Types of Prompts
+
+Promptzy organizes prompts into four categories, each serving a distinct purpose:
+
+<CardGrid>
+  <Card title="System Prompts" icon="setting">
+    Define who an AI *is* — its role, personality, tone, and rules. Sent at the
+    start of every conversation.
+  </Card>
+  <Card title="Task Prompts" icon="document">
+    Tell an AI what to *do* — a specific action, request, or workflow to
+    execute.
+  </Card>
+  <Card title="Image Prompts" icon="star">
+    Describe what to *generate visually* — style, subject, lighting, mood, and
+    composition.
+  </Card>
+  <Card title="Video Prompts" icon="rocket">
+    Like image prompts, but with motion, timing, camera movement, and narrative
+    arc.
+  </Card>
+</CardGrid>
+
+---
+
+## Core Principles
+
+### 1. Be Specific
+
+Vague prompts produce vague results. The more detail you give, the better the output.
+
+| ❌ Vague              | ✅ Specific                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| _"Write a blog post"_ | _"Write a 600-word blog post about sustainable fashion for eco-conscious Millennials, with a conversational tone and 3 actionable tips"_  |
+| _"A portrait"_        | _"Studio portrait of a woman in her 30s, soft diffused lighting, shallow depth of field, warm golden tones, professional headshot style"_ |
+
+### 2. Assign a Role
+
+Giving the AI a role dramatically improves the quality and consistency of its responses.
+
+```
+You are a senior UX designer with 10 years of experience building SaaS products.
+Your advice is practical, concise, and grounded in real-world constraints.
+```
+
+### 3. Define the Output Format
+
+If you want a specific structure, say so explicitly.
+
+```
+Respond with a JSON object containing keys: title, summary, tags (array), and difficulty (1-5).
+```
+
+### 4. Set Constraints
+
+Constraints help the AI stay focused and avoid irrelevant tangents.
+
+```
+- Keep responses under 200 words
+- Do not use bullet points
+- Avoid technical jargon
+- Always provide at least one concrete example
+```
+
+### 5. Use Examples (Few-Shot Prompting)
+
+Showing the AI an example of what you want is often more effective than describing it.
+
+```
+Here's an example of the tone I want:
+
+Input: "coffee"
+Output: "A dark, smoky blend with notes of dark chocolate and cedar — the kind of cup that doesn't apologize for being bold."
+
+Now write a similar description for: "matcha"
+```
+
+### 6. Iterate and Refine
+
+Your first prompt is rarely your best one. Save working prompts to Promptzy, note what worked, and refine from there.
+
+---
+
+## System Prompt Best Practices
+
+System prompts install a persistent persona into an AI for the entire conversation. A great system prompt answers:
+
+- **Who are you?** → Role and identity
+- **What do you know?** → Domain expertise
+- **How do you behave?** → Tone, communication style
+- **What are your limits?** → What to avoid, what to always do
+
+**Template structure:**
+
+```
+You are [role] with [expertise].
+Your communication style is [tone/style].
+You always [positive behaviors].
+You never [negative behaviors / things to avoid].
+When asked about [topic], you [specific behavior].
+```
+
+<Aside type="tip">
+  Keep system prompts under ~500 tokens for best results. Extremely long system
+  prompts can cause models to "forget" instructions mid-conversation.
+</Aside>
+
+---
+
+## Task Prompt Best Practices
+
+Task prompts are one-shot instructions. Structure them like a mini brief:
+
+1. **Context** — what situation or background info does the AI need?
+2. **Task** — what exactly do you need it to do?
+3. **Format** — how should the output be structured?
+4. **Constraints** — length, style, tone, what to avoid
+
+```
+Context: I run a small Etsy shop selling hand-painted plant pots.
+Task: Write 5 product listing titles for a terracotta pot with a painted succulent design.
+Format: Each title should be under 80 characters, include relevant keywords.
+Constraints: Must feel warm and artisan, not corporate.
+```
+
+---
+
+## Image Prompt Best Practices
+
+Great image prompts describe the **subject**, **style**, **lighting**, **color palette**, and **mood**. Think like a creative director giving a brief to a photographer.
+
+**Core elements:**
+
+```
+[subject description], [art style / medium], [lighting], [color palette], [mood / atmosphere], [camera / composition details]
+```
+
+**Example:**
+
+```
+A lone astronaut standing on the surface of Mars at dusk, cinematic photography,
+long shadows, burnt orange and deep indigo sky, dust haze in the atmosphere,
+wide angle lens, dramatic backlighting, photorealistic, 8K
+```
+
+**Useful style keywords:**
+
+- `cinematic`, `photorealistic`, `hyperrealistic`, `film grain`
+- `concept art`, `digital painting`, `oil painting`, `watercolor`
+- `Studio Ghibli style`, `anime`, `pixel art`, `low poly`
+- `soft bokeh`, `shallow depth of field`, `wide angle`, `macro`
+- `golden hour`, `neon-lit`, `high contrast`, `moody`, `ethereal`
+
+<Aside type="tip">
+  For **negative prompts** (supported by models like `flux` and `zimage`), list
+  things to exclude: `blurry, low quality, watermark, text, bad anatomy`.
+</Aside>
+
+---
+
+## Video Prompt Best Practices
+
+Video prompts add motion and time to image concepts. Include:
+
+- **The visual scene** (same as image prompts)
+- **Camera movement** — pan, zoom, tracking shot, drone flyover
+- **Subject motion** — walking, flowing, rotating, flickering
+- **Pacing / duration** feel — slow motion, time-lapse, real-time
+- **Audio feel** (for models that support it)
+
+**Example:**
+
+```
+Slow cinematic drone pullback from a campfire in a misty forest at night,
+pine trees fading into fog, golden firelight flickering, stars emerging above the treeline,
+smooth easing motion, 6 seconds, atmospheric and serene
+```
+
+---
+
+## Prompting for Promptzy's AI Assistant
+
+When using Promptzy's built-in AI assistant to _generate_ prompts, give it just enough context:
+
+- Specify the **type** first (System / Task / Image / Video)
+- Describe the **use case or subject** briefly
+- Mention any **tone, style, or constraints** you want
+
+**Example inputs:**
+
+```
+A system prompt for a no-nonsense senior software engineer
+who gives blunt, practical code review feedback
+```
+
+```
+An image prompt for a magical forest library with glowing bookshelves,
+fantasy art style, warm amber light
+```
+
+The AI assistant will expand your brief into a full, production-ready prompt.

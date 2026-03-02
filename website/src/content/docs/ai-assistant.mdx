@@ -1,0 +1,152 @@
+---
+title: AI Assistant
+description: Generate prompts with AI using Promptzy's built-in assistant, powered by Pollinations.
+---
+
+import { Steps, Aside, Card, CardGrid } from "@astrojs/starlight/components";
+
+Promptzy includes a built-in AI assistant that generates ready-to-use prompts on demand. It's powered by [Pollinations](https://pollinations.ai) — a free, OpenAI-compatible AI API with access to dozens of top models.
+
+---
+
+## Get a Pollinations API Key
+
+<Steps>
+
+1. Visit **[enter.pollinations.ai](https://enter.pollinations.ai)** and sign up for a free account.
+
+2. Create a new key. For browser use, choose a **publishable key** (`pk_...`) — it's rate-limited but free and safe to use client-side.
+
+   <Aside type="note">
+     `sk_` (secret) keys are for server-side use only. Never paste a secret key
+     into a browser app.
+   </Aside>
+
+3. Copy your key — you'll paste it into Promptzy's Settings next.
+
+</Steps>
+
+---
+
+## Configure the AI Assistant
+
+<Steps>
+
+1. Open Promptzy and click the **Settings** icon (⚙️).
+
+2. Scroll to **AI Assistant Configuration**.
+
+3. Paste your **Pollinations API Key** into the key field.
+
+4. Optionally select a different **AI Model** (default is `gemini-fast` — a great all-rounder).
+
+5. Click **Save Changes**.
+
+</Steps>
+
+---
+
+## Generating a Prompt
+
+<Steps>
+
+1. Click **AI Prompt Assistant** in the bottom-right corner of the screen to expand the panel.
+
+2. Select a **prompt type**: System, Task, Image, or Video.
+
+3. Describe what you want in the text area. For example:
+   - _"a friendly customer support chatbot that speaks in a warm, casual tone"_ (System)
+   - _"write a product description for handmade soy candles"_ (Task)
+   - _"cinematic sunset over a cyberpunk city skyline, neon reflections"_ (Image)
+
+4. Click **Generate Prompt** — the response streams in live.
+
+5. **Copy** the result to clipboard, or click **Use as Prompt** to save it directly to your library.
+
+</Steps>
+
+---
+
+## Available Models
+
+Any [Pollinations text model](https://gen.pollinations.ai/api/docs) can be used. Change the model in **Settings → AI Assistant Configuration**.
+
+| Model          | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| `gemini-fast`  | Google Gemini 2.5 Flash Lite — default, fast & affordable |
+| `openai`       | GPT-5 Mini — fast and well-rounded                        |
+| `openai-large` | GPT-5.2 — most capable OpenAI model                       |
+| `claude`       | Claude Sonnet 4.6 — nuanced, high-quality output          |
+| `claude-fast`  | Claude Haiku 4.5 — fast and smart                         |
+| `deepseek`     | DeepSeek V3.2 — efficient reasoning                       |
+| `mistral`      | Mistral Small 3.2 — lightweight and cost-effective        |
+| `qwen-coder`   | Qwen3 Coder 30B — great for code-related prompts          |
+
+<Aside type="tip">
+  For creative writing or image prompt generation, try `claude` or
+  `openai-large`. For fast iteration, `gemini-fast` or `openai` are excellent
+  defaults.
+</Aside>
+
+---
+
+## Customising the System Prompt
+
+The AI assistant uses a default system prompt tuned for generating high-quality prompts. You can override it:
+
+<Steps>
+
+1. Open **Settings → AI Assistant Configuration**.
+
+2. Uncheck **Use default system prompt**.
+
+3. Edit the prompt freely — tailor the assistant's persona, style, and output format to your needs.
+
+4. Click **Save Changes**. Your custom prompt is stored in your browser.
+
+5. Click **Reset to default** at any time to restore the original system prompt.
+
+</Steps>
+
+---
+
+## How It Works (Technical)
+
+Promptzy calls the Pollinations API directly from your browser using a streaming fetch request:
+
+- **Endpoint:** `POST https://gen.pollinations.ai/v1/chat/completions`
+- **Protocol:** OpenAI-compatible (Server-Sent Events for streaming)
+- **Auth:** `Authorization: Bearer <your-api-key>` header
+- **Default params:** `temperature: 0.4`, `seed: -1` (random), `stream: true`
+
+The API key is resolved in this priority order:
+
+1. `VITE_POLLINATIONS_API_KEY` environment variable (for Docker / self-hosted builds)
+2. `pollinations-api-key` in `localStorage` (set via Settings dialog)
+
+---
+
+## Pollinations API Overview
+
+Pollinations provides access to a wide range of AI models through a single, OpenAI-compatible API.
+
+<CardGrid>
+  <Card title="Free to Use" icon="star">
+    Publishable `pk_` keys are free with rate limits — no credit card needed for
+    personal use.
+  </Card>
+  <Card title="Many Models" icon="list-format">
+    Access GPT-5, Claude Sonnet, Gemini, DeepSeek, Mistral, and more from one
+    API endpoint.
+  </Card>
+  <Card title="Streaming" icon="rocket">
+    Supports Server-Sent Events (SSE) for real-time streaming responses — no
+    waiting for the full output.
+  </Card>
+  <Card title="OpenAI-Compatible" icon="approve-check-circle">
+    Use any OpenAI SDK by just changing the base URL to
+    `https://gen.pollinations.ai`.
+  </Card>
+</CardGrid>
+
+Full API documentation: [gen.pollinations.ai/api/docs](https://gen.pollinations.ai/api/docs)

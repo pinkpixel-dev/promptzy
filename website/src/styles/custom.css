@@ -1,0 +1,307 @@
+/* =============================================================
+   Promptzy Docs — Dark Glassy Theme
+   Rose Pink × Cyan × Amber × Deep Navy
+   ============================================================= */
+
+/* ── Color Variables ───────────────────────────────────────── */
+:root,
+[data-theme='dark'] {
+  /* Rose Pink accent */
+  --sl-color-accent-low:  #2d0018;
+  --sl-color-accent:      #ff4d8c;
+  --sl-color-accent-high: #ffa8c8;
+
+  /* Deep navy backgrounds */
+  --sl-color-black:  #050b14;
+  --sl-color-gray-6: #090f1c;
+  --sl-color-gray-5: #0f1a2e;
+  --sl-color-gray-4: #1c2b3f;
+  --sl-color-gray-3: #3a4f66;
+  --sl-color-gray-2: #7a90a8;
+  --sl-color-gray-1: #bfcfde;
+  --sl-color-white:  #eef3fa;
+
+  /* Semantic */
+  --sl-color-text:         #e0eaf5;
+  --sl-color-text-accent:  #ff80aa;
+  --sl-color-bg:           #050b14;
+  --sl-color-bg-nav:       rgba(5, 11, 20, 0.75);
+  --sl-color-bg-sidebar:   rgba(5, 11, 20, 0.55);
+  --sl-color-hairline:     rgba(255, 77, 140, 0.15);
+  --sl-color-hairline-light: rgba(0, 212, 255, 0.1);
+}
+
+/* ── Page background ──────────────────────────────────────── */
+html,
+html[data-theme='dark'] {
+  background-color: var(--sl-color-black);
+}
+
+body {
+  background: radial-gradient(ellipse at 20% 0%, rgba(255, 77, 140, 0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 100%, rgba(0, 212, 255, 0.05) 0%, transparent 60%),
+              linear-gradient(160deg, #060d1a 0%, #0a1525 50%, #070e1c 100%);
+  background-attachment: fixed;
+}
+
+/* ── Top Header ───────────────────────────────────────────── */
+header.header {
+  background: rgba(5, 11, 20, 0.78) !important;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 77, 140, 0.2) !important;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Sidebar ──────────────────────────────────────────────── */
+.sidebar-pane {
+  background: rgba(5, 11, 20, 0.6) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(0, 212, 255, 0.1) !important;
+}
+
+/* Active nav link */
+a[aria-current='page'] {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 77, 140, 0.15) 0%,
+    rgba(0, 212, 255, 0.06) 100%
+  ) !important;
+  border-color: #ff4d8c !important;
+  color: #ffa8c8 !important;
+}
+
+/* ── Right sidebar (TOC) ──────────────────────────────────── */
+.right-sidebar-panel {
+  background: rgba(5, 11, 20, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(0, 212, 255, 0.08) !important;
+}
+
+/* ── Logo ─────────────────────────────────────────────────── */
+.site-title img {
+  height: 30px;
+  width: auto;
+}
+
+/* ── Hero Section ─────────────────────────────────────────── */
+.hero {
+  padding-block: 4rem;
+}
+
+.hero h1 {
+  background: linear-gradient(135deg, #ff4d8c 0%, #ff80aa 45%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: clamp(2.2rem, 5vw, 3.5rem) !important;
+}
+
+.hero .tagline {
+  color: var(--sl-color-gray-1);
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+/* Primary hero button */
+.hero a.primary {
+  background: linear-gradient(135deg, #ff4d8c, #cc2068) !important;
+  border-color: #ff4d8c !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px rgba(255, 77, 140, 0.35);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.hero a.primary:hover {
+  box-shadow: 0 0 32px rgba(255, 77, 140, 0.55);
+  transform: translateY(-1px);
+}
+
+/* Minimal hero button */
+.hero a.minimal {
+  color: #00d4ff !important;
+  border-color: rgba(0, 212, 255, 0.4) !important;
+}
+
+.hero a.minimal:hover {
+  border-color: #00d4ff !important;
+  background: rgba(0, 212, 255, 0.08) !important;
+}
+
+/* ── Headings ─────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+  color: var(--sl-color-white);
+}
+
+h2 {
+  border-bottom: 1px solid rgba(255, 77, 140, 0.18);
+  padding-bottom: 0.25em;
+  margin-top: 2em;
+}
+
+h3 {
+  color: #ffa8c8;
+}
+
+/* ── Links ────────────────────────────────────────────────── */
+a:not([class]):not([data-footnote-ref]) {
+  color: #00d4ff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.25);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+a:not([class]):not([data-footnote-ref]):hover {
+  color: #ff4d8c;
+  border-bottom-color: rgba(255, 77, 140, 0.5);
+}
+
+/* ── Code ─────────────────────────────────────────────────── */
+pre {
+  background: rgba(0, 20, 40, 0.65) !important;
+  border: 1px solid rgba(0, 212, 255, 0.14) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+:not(pre) > code {
+  background: rgba(0, 212, 255, 0.08) !important;
+  color: #00d4ff !important;
+  border: 1px solid rgba(0, 212, 255, 0.18) !important;
+  border-radius: 4px;
+  padding: 0.15em 0.45em;
+  font-size: 0.875em;
+}
+
+/* ── Tables ───────────────────────────────────────────────── */
+table {
+  border: 1px solid rgba(255, 77, 140, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+thead {
+  background: rgba(255, 77, 140, 0.1);
+}
+
+thead th {
+  color: #ffa8c8;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ── Aside / Callout boxes ────────────────────────────────── */
+.starlight-aside {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+}
+
+.starlight-aside--note {
+  border-color: #00d4ff !important;
+}
+
+.starlight-aside--tip {
+  border-color: #fbbf24 !important;
+}
+
+.starlight-aside--caution {
+  border-color: #ff4d8c !important;
+}
+
+.starlight-aside--danger {
+  border-color: #ff3333 !important;
+}
+
+/* Aside title icon color */
+.starlight-aside--note .starlight-aside__title {
+  color: #00d4ff;
+}
+
+.starlight-aside--tip .starlight-aside__title {
+  color: #fbbf24;
+}
+
+.starlight-aside--caution .starlight-aside__title {
+  color: #ff4d8c;
+}
+
+/* ── Steps component ──────────────────────────────────────── */
+.sl-steps > li::before {
+  background: linear-gradient(135deg, #ff4d8c, #00d4ff);
+  color: #050b14;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(255, 77, 140, 0.4);
+}
+
+.sl-steps > li {
+  border-left-color: rgba(255, 77, 140, 0.25) !important;
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
+.card {
+  background: rgba(255, 255, 255, 0.035) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 12px !important;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  border-color: rgba(255, 77, 140, 0.35) !important;
+  box-shadow: 0 8px 32px rgba(255, 77, 140, 0.1);
+  transform: translateY(-2px);
+}
+
+.card .card-title {
+  color: #ffa8c8;
+}
+
+/* ── Tabs ─────────────────────────────────────────────────── */
+.tablist-wrapper [role='tablist'] {
+  border-bottom-color: rgba(255, 77, 140, 0.2) !important;
+}
+
+[role='tab'][aria-selected='true'] {
+  color: #ff4d8c !important;
+  border-bottom-color: #ff4d8c !important;
+}
+
+[role='tab']:hover:not([aria-selected='true']) {
+  color: #00d4ff !important;
+}
+
+/* ── Badges ───────────────────────────────────────────────── */
+.sl-badge {
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sl-color-gray-6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 77, 140, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 77, 140, 0.7);
+}
+
+/* ── Selection ────────────────────────────────────────────── */
+::selection {
+  background: rgba(255, 77, 140, 0.3);
+  color: #fff;
+}

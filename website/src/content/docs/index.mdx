@@ -1,0 +1,68 @@
+---
+title: Promptzy Docs
+description: A modern AI prompt manager with cloud sync, tagging, search, and a built-in AI assistant.
+template: splash
+hero:
+  tagline: Organize your AI prompts. Sync across devices. Generate with AI.
+  image:
+    file: ../../assets/logo.png
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: Try it live
+      link: https://promptzy.pinkpixel.dev
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+## What is Promptzy?
+
+**Promptzy** is a sleek, modern web app for organizing and managing your AI prompts. Tag them, search them, sync them to the cloud, and generate new ones with an integrated AI assistant — all from a single, beautiful interface.
+
+<CardGrid stagger>
+  <Card title="Organize Everything" icon="list-format">
+    Categorize prompts as **System**, **Task**, **Image**, or **Video**. Add
+    custom tags and find exactly what you need in seconds.
+  </Card>
+  <Card title="Cloud Sync" icon="cloud-upload">
+    Supabase-backed storage keeps your prompt library in sync across every
+    device — phone, tablet, desktop.
+  </Card>
+  <Card title="AI Assistant" icon="rocket">
+    Generate ready-to-use prompts with one click using the built-in AI
+    assistant, powered by [Pollinations](https://pollinations.ai).
+  </Card>
+  <Card title="Install Anywhere" icon="laptop">
+    Run as a PWA, native Linux desktop app, Docker container, or straight from
+    npm — your choice.
+  </Card>
+</CardGrid>
+
+## Jump right in
+
+<CardGrid>
+  <LinkCard
+    title="Installation"
+    href="/getting-started/"
+    description="npm, Docker, Linux desktop, PWA — pick your install method."
+  />
+  <LinkCard
+    title="Supabase Setup"
+    href="/supabase-setup/"
+    description="Set up your free cloud database in under 5 minutes."
+  />
+  <LinkCard
+    title="AI Assistant"
+    href="/ai-assistant/"
+    description="Get a Pollinations API key and start generating prompts."
+  />
+  <LinkCard
+    title="Prompt Templates"
+    href="/prompt-templates/"
+    description="10 ready-to-use templates across every prompt type."
+  />
+</CardGrid>
