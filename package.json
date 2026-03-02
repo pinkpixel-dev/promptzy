@@ -57,7 +57,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "node bin/promptzy.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "electron:dev": "concurrently -k -n VITE,ELECTRON -c cyan,magenta \"npm run dev\" \"wait-on http://localhost:8080 && electron electron/main.cjs\"",
+    "electron:build": "npm run build && electron-builder",
+    "docker:build": "docker build -t promptzy .",
+    "docker:run": "docker run --rm -p 3000:80 promptzy",
+    "docker:up": "docker compose up --build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -120,6 +125,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.3",
+    "concurrently": "^9.2.1",
+    "electron": "^34.5.8",
+    "electron-builder": "^25.1.8",
     "eslint": "^9.39.3",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -128,6 +136,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1",
-    "vite-plugin-pwa": "^1.2.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "wait-on": "^8.0.5"
   }
 }

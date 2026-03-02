@@ -5,6 +5,27 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-03-01
+
+### Added
+
+- **🖥️ Electron Desktop App:** Native desktop application built with Electron 34
+  - Custom `app://` protocol serves the built SPA from `dist/` — react-router `BrowserRouter` routes work identically to the web version
+  - Secure architecture: `contextIsolation: true`, `nodeIntegration: false`, sandboxed renderer, minimal `contextBridge` surface
+  - Native app menu with File / Edit / View (zoom & fullscreen) / Window / Help (GitHub & Pink Pixel links)
+  - Right-click context menu for cut/copy/paste in editable fields
+  - All external links open in the system browser via `shell.openExternal`
+  - macOS traffic-light / `hiddenInset` title bar; proper dock behaviour
+  - Dev mode loads the Vite dev server (`http://localhost:8080`) automatically
+- **📦 Linux Binary Releases:** Pre-built Linux packages published to Cloudflare R2
+  - **Debian / Ubuntu / Mint (`.deb`):** [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb)
+  - **Universal Linux (`.AppImage`):** [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)
+- **🐳 Docker Support:** Multi-stage Docker build for self-hosted deployments
+  - Stage 1 — Node 20 Alpine compiles the Vite SPA with optional `VITE_*` build args for baking in credentials
+  - Stage 2 — Nginx 1.27 Alpine serves static assets; SPA-aware `try_files` routing, security headers, gzip compression, and smart cache policies (immutable for hashed assets, no-cache for HTML)
+  - `docker-compose.yml` for one-command spin-up: `docker compose up --build`
+  - New npm scripts: `docker:build`, `docker:run`, `docker:up`, `electron:dev`, `electron:build`
+
 ## [1.4.1] - 2026-03-01
 
 ### Changed

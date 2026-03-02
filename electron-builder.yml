@@ -1,0 +1,108 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Promptzy — electron-builder configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: dev.pinkpixel.promptzy
+productName: Promptzy
+copyright: "Copyright © 2025 Pink Pixel — https://pinkpixel.dev"
+
+# Override package.json "main" so Electron uses the main process file,
+# not the web entry point.
+extraMetadata:
+  main: electron/main.cjs
+
+# ── Output ────────────────────────────────────────────────────────────────────
+directories:
+  output: dist-electron
+  buildResources: build-resources
+
+# ── Files to bundle ───────────────────────────────────────────────────────────
+files:
+  - dist/**
+  - electron/**
+  - package.json
+  - "!src/**"
+  - "!.github/**"
+  - "!*.md"
+  - "!*.txt"
+  - "!*.sql"
+  - "!wrangler.toml"
+  - "!tsconfig*.json"
+  - "!eslint.config.js"
+  - "!vite.config.ts"
+  - "!electron-builder.yml"
+  - "!nginx.conf"
+  - "!Dockerfile"
+  - "!docker-compose.yml"
+  - "!.dockerignore"
+  - "!bin/**"
+  - "!node_modules/**"
+
+# Copy icon into extraResources so main.cjs can always find it
+extraResources:
+  - from: public/icon.png
+    to: icon.png
+  - from: public/favicon.png
+    to: favicon.png
+
+# ── App icon ──────────────────────────────────────────────────────────────────
+icon: public/icon.png
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - arm64
+  icon: public/icon.png
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: public/icon.png
+  uninstallerIcon: public/icon.png
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Promptzy
+  artifactName: "${productName}-Setup-${version}-${arch}.${ext}"
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  icon: public/icon.png
+  category: public.app-category.productivity
+  darkModeSupport: true
+
+dmg:
+  title: "Promptzy ${version}"
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+
+# ── Linux ─────────────────────────────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+  icon: public/icon.png
+  category: Utility
+  description: "AI Prompt Manager — organise and manage your AI prompts"
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+  desktop:
+    Name: Promptzy
+    Comment: AI Prompt Manager
+    Categories: Utility;Office;
+
+# ── Auto-updates (uncomment to enable GitHub releases)  ───────────────────────
+# publish:
+#   provider: github
+#   owner:    pinkpixel-dev
+#   repo:     promptzy

@@ -1,0 +1,26 @@
+node_modules
+dist
+dist-electron
+.git
+.github
+.vscode
+.idea
+.env
+.env.\*
+_.log
+_.local
+.DS_Store
+Thumbs.db
+coverage
+
+# Electron build artifacts
+
+build-resources
+release
+
+# Source files not needed in Docker build context (already in .gitignore exclusions)
+
+supabasekeys.md
+pollinations.md
+mybuttons.txt
+pretty-elements.txt

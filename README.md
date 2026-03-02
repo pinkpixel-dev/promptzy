@@ -17,6 +17,8 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?logo=tailwind-css)
 ![Supabase](https://img.shields.io/badge/Supabase-2.49.7-3ECF8E?logo=supabase)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Electron](https://img.shields.io/badge/Electron-34.x-47848F?logo=electron)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
@@ -31,6 +33,8 @@
 - **Refresh Prompts**: Manual refresh button to sync prompts after configuration changes
 - **AI Assistant**: Generate new prompts with AI — powered by [Pollinations](https://pollinations.ai), with selectable model and streaming responses
 - **Progressive Web App (PWA)**: Install as a mobile app directly from your browser
+- **Desktop App**: Native Electron app for Linux (more platforms coming)
+- **Docker**: Run anywhere with a single `docker compose up` command
 - **Modern UI**: Clean, responsive interface built with Shadcn/UI and Tailwind
 
 ## 🖥️ Screenshots
@@ -114,6 +118,62 @@ Promptzy can be installed as a mobile app directly from your browser! No app sto
 - 🔄 Automatic updates when new versions are released
 - 🏠 Easy access from your home screen
 - 🔄 Manual refresh button for syncing prompts after setup
+
+### 🖥️ Linux Desktop App (Electron)
+
+Download the native desktop app for Linux — no browser required.
+
+| Package                | Format      | Download                                                                                                 |
+| ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
+| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb) |
+| Universal Linux        | `.AppImage` | [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)   |
+
+**Install the `.deb` package:**
+
+```bash
+wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb
+sudo dpkg -i Promptzy-1.4.1-amd64.deb
+```
+
+**Run the `.AppImage` (no install needed):**
+
+```bash
+wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage
+chmod +x Promptzy-1.4.1.AppImage
+./Promptzy-1.4.1.AppImage
+```
+
+### 🐳 Docker
+
+Run Promptzy as a self-hosted web app in a Docker container.
+
+**Quick start (pre-built image from source):**
+
+```bash
+git clone https://github.com/pinkpixel-dev/promptzy.git
+cd promptzy
+docker compose up --build
+```
+
+Promptzy will be available at `http://localhost:3000`.
+
+**With Supabase & Pollinations credentials baked in:**
+
+```bash
+VITE_SUPABASE_URL=https://xxxx.supabase.co \
+VITE_SUPABASE_ANON_KEY=your_anon_key \
+VITE_POLLINATIONS_API_KEY=pk_your_key \
+docker compose up --build
+```
+
+**Or build & run manually:**
+
+```bash
+npm run docker:build   # docker build -t promptzy .
+npm run docker:run     # docker run --rm -p 3000:80 promptzy
+```
+
+> Credentials can also be configured at runtime through the in-app Settings dialog — no rebuild needed.
 
 ### Deployment
 
@@ -207,7 +267,9 @@ Open **Settings → AI Assistant Configuration**, uncheck **Use default system p
 - React Hook Form with Zod
 - Supabase for cloud storage
 - PWA (Progressive Web App) with Workbox (vite-plugin-pwa v1.2)
-- Cloudflare Pages for deployment
+- **Electron 34** — native desktop app (Linux `.deb` & `.AppImage`; Windows & macOS builds available)
+- **Docker** — multi-stage Nginx image for self-hosted deployments
+- Cloudflare Pages for hosted deployment
 
 ## 📋 Roadmap
 

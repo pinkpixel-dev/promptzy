@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-**Promptzy** is a modern Vite-based React application for managing, organizing, and utilizing AI prompts. It serves as a centralized repository where users can create, edit, categorize, and quickly access their collection of prompts across devices. The application supports global npm installation with CLI commands for easy deployment and usage.
+**Promptzy** is a modern Vite-based React application for managing, organizing, and utilizing AI prompts. It serves as a centralized repository where users can create, edit, categorize, and quickly access their collection of prompts across devices. The application ships as a hosted web app (Cloudflare Pages), a self-hosted Docker image, a native Linux desktop app (Electron), a Progressive Web App, and a global npm CLI.
 
 ## ✨ Key Features
 
@@ -47,6 +47,11 @@
 - **Settings & Configuration:** Comprehensive settings dialog with in-app Database Setup Guide, Supabase connection testing & diagnostics, and AI system prompt management
 - **Theming & Responsive Design:** Custom purple theme with dark/light mode support and smooth animations
 - **Global Installation:** npm global installation support with CLI commands (`promptzy`, `prompt-dashboard`, `ai-prompt-dashboard`)
+- **Docker:** Multi-stage Nginx Docker image for self-hosted deployments; `docker compose up --build` one-liner; supports `VITE_*` build-arg credentials
+- **Electron Desktop App:** Native Linux desktop app (`.deb` and `.AppImage`); secure `contextIsolation` preload; custom `app://` protocol for SPA routing in packaged builds; native app menu, context menus, and external link handling
+- **Linux Binary Downloads:**
+  - [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb)
+  - [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)
 - **Production Ready:** Cloudflare Pages deployment with automated CI/CD and proper SPA routing
 
 ## 🛠️ Technical Stack
@@ -65,6 +70,8 @@
   - UUID validation and proper error handling
 - **AI Integration:** Pollinations.ai API (`https://gen.pollinations.ai/v1/chat/completions`) with streaming responses, configurable model, and API key auth
 - **PWA Features:** vite-plugin-pwa v1.2 with Workbox for service worker and caching
+- **Electron 34:** Native desktop app — `electron/main.cjs` (main process) + `electron/preload.cjs` (sandboxed contextBridge); packaged via `electron-builder` to `.deb` and `.AppImage`
+- **Docker:** Multi-stage `Dockerfile` (Node 20 build → Nginx 1.27 serve) + `nginx.conf` (SPA routing, security headers, gzip) + `docker-compose.yml`
 - **Notifications:** Sonner + custom toast hook for user feedback
 - **Theming:** Next-Themes for dark/light mode with custom animations
 - **Icons:** Lucide React (consistent icon system)
@@ -109,20 +116,17 @@ promptzy/
 │   │   └── utils.ts             # Utility functions
 │   ├── pages/              # Route pages (Index, NotFound)
 │   └── types/              # TypeScript definitions
-├── dist/                   # Build output directory
+├── electron/               # Electron main process
+│   ├── main.cjs            # Main process: app:// protocol, window factory, menus
+│   └── preload.cjs         # Sandboxed preload — exposes window.electronAPI
+├── dist/                   # Vite build output (web + served by Electron)
+├── dist-electron/          # Electron packager output (.deb, .AppImage, etc.)
+├── Dockerfile              # Multi-stage Docker build (Node 20 → Nginx 1.27)
+├── nginx.conf              # SPA-aware Nginx config with security headers & gzip
+├── docker-compose.yml      # One-command self-hosted deployment
+├── electron-builder.yml    # electron-builder packaging config
 ├── wrangler.toml           # Cloudflare Pages config
 └── vite.config.ts          # Vite config (includes @tailwindcss/vite plugin)
-│   │   ├── systemPromptStore.ts # AI assistant system prompt management
-│   │   └── utils.ts             # Utility functions
-│   ├── pages/              # Route pages (Index, NotFound)
-│   └── types/              # TypeScript definitions
-├── dist/                   # Build output directory
-│   └── _routes.json        # Generated SPA routing configuration
-├── .github/                # CI/CD workflows
-├── wrangler.toml           # Cloudflare Pages config
-├── tailwind.config.ts      # Tailwind config
-├── vite.config.ts          # Vite config
-└── tsconfig.json           # TypeScript config
 ```
 
 ## 🚀 Getting Started
@@ -164,6 +168,7 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 
 ## ⚠️ Recent Changes & User Preferences
 
+- **✅ v1.4.2 Released:** Electron desktop app (Linux `.deb` & `.AppImage`), Docker self-hosted deployment, new download links
 - **✅ v1.4.1 Released:** Pollinations API migration to new endpoint, API key + model selection in Settings
 - **✅ v1.4.0 Released:** Glass theming, ShinyButton, Tailwind CSS v4, Database Setup Guide, major UI overhaul
 - **✅ Tailwind CSS v4:** Migrated to CSS-first architecture — `tailwind.config.ts` and `postcss.config.js` removed
