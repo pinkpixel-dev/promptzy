@@ -128,7 +128,7 @@
     "concurrently": "^9.2.1",
     "electron": "^34.5.8",
     "electron-builder": "^25.1.8",
-    "eslint": "^9.39.3",
+    "eslint": "^10.0.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
