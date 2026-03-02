@@ -1,7 +1,7 @@
 # ✨ Promptzy 🎯
 
 <p align="center">
-  <img src="https://res.cloudinary.com/di7ctlowx/image/upload/v1748393462/icon_lzh8zy.png" alt="Promptzy Logo" width="250" height="250" />
+  <img src="./logo.png" alt="Promptzy Logo" width="250" height="250" />
 </p>
 
 **Promptzy** - A modern, cute web application for managing and organizing your AI prompts, with tagging, search, and cloud storage.
