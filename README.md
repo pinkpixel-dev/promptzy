@@ -9,7 +9,7 @@
 <div align="center">
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.4.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.4.1-green.svg)
 ![NPM](https://img.shields.io/npm/v/@pinkpixel/promptzy?color=red)
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)
@@ -29,7 +29,7 @@
 - **Powerful Search**: Find the perfect prompt with full-text search and tag filtering
 - **Cloud Storage**: Reliable Supabase cloud storage with cross-device sync
 - **Refresh Prompts**: Manual refresh button to sync prompts after configuration changes
-- **AI Assistant**: Generate new prompt ideas with AI help
+- **AI Assistant**: Generate new prompts with AI — powered by [Pollinations](https://pollinations.ai), with selectable model and streaming responses
 - **Progressive Web App (PWA)**: Install as a mobile app directly from your browser
 - **Modern UI**: Clean, responsive interface built with Shadcn/UI and Tailwind
 
@@ -160,6 +160,42 @@ The application will now use your Supabase instance for cloud storage! The cloud
 5. Assign tags to organize your prompts
 6. Use the search box and tag filters to find prompts
 7. Select a prompt to copy it or edit its details
+
+## 🤖 AI Assistant
+
+The AI Assistant panel sits at the bottom-right of the screen and lets you generate ready-to-use prompts with a single click.
+
+### Setup
+
+1. Grab a free API key from [enter.pollinations.ai](https://enter.pollinations.ai) — a publishable `pk_` key works fine for browser use
+2. Open **Settings** (gear icon) → **AI Assistant Configuration**
+3. Paste your key into **Pollinations API Key**
+4. Optionally change the **AI Model** (default: `gemini-fast`)
+5. Click **Save Changes**
+
+### Generating a Prompt
+
+1. Click **AI Prompt Assistant** in the bottom-right corner to expand it
+2. Choose the prompt type: **System**, **Task**, **Image**, or **Video**
+3. Describe what you want in the text area (e.g. _"a friendly customer support assistant"_ for a System prompt)
+4. Click **Generate Prompt** — response streams in live
+5. **Copy** the result to clipboard, or click **Use as Prompt** to save it directly to your library
+
+### Available Models
+
+Any [Pollinations text model](https://gen.pollinations.ai/api/docs) can be used. Some good picks:
+
+| Model          | Description                                          |
+| -------------- | ---------------------------------------------------- |
+| `gemini-fast`  | Google Gemini 2.5 Flash Lite — default, fast & cheap |
+| `openai`       | GPT-5 Mini — fast & balanced                         |
+| `openai-large` | GPT-5.2 — most powerful                              |
+| `claude`       | Claude Sonnet 4.6 — capable & balanced               |
+| `deepseek`     | DeepSeek V3.2 — efficient reasoning                  |
+
+### Customising the System Prompt
+
+Open **Settings → AI Assistant Configuration**, uncheck **Use default system prompt**, and edit the prompt freely. Click **Reset to default** to restore the original at any time.
 
 ## 🧩 Tech Stack
 

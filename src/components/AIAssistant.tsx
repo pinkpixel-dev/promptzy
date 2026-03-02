@@ -64,11 +64,36 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
     };
   }, []);
 
+  const POLLINATIONS_MODEL_DEFAULT = 'gemini-fast';
+  const POLLINATIONS_MODEL_KEY = 'pollinations-model';
+
+  const getApiKey = (): string => {
+    return (
+      (import.meta.env.VITE_POLLINATIONS_API_KEY as string | undefined) ||
+      localStorage.getItem('pollinations-api-key') ||
+      ''
+    );
+  };
+
+  const getModel = (): string => {
+    return localStorage.getItem(POLLINATIONS_MODEL_KEY) || POLLINATIONS_MODEL_DEFAULT;
+  };
+
   const handleGeneratePrompt = async () => {
     if (!prompt.trim()) {
       toast({
         title: "Error",
         description: "Please enter a prompt to generate content",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      toast({
+        title: "API Key Required",
+        description: "Please add your Pollinations API key in Settings to use AI generation.",
         variant: "destructive",
       });
       return;
@@ -90,174 +115,98 @@ const AIAssistant = ({ onUsePrompt }: AIAssistantProps) => {
       let userPrompt = '';
 
       if (promptType === "system") {
-        userPrompt = `Create a system prompt: ${prompt}. Define the AI's role, personality, and constraints. and style. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
+        userPrompt = `Create a system prompt: ${prompt}. Define the AI's role, personality, and constraints. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
       } else if (promptType === "task") {
-        userPrompt = `Create a task prompt: ${prompt}. Provide specific instructions for the AI. and style. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
+        userPrompt = `Create a task prompt: ${prompt}. Provide specific instructions for the AI. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
       } else if (promptType === "image") {
-        userPrompt = `Create an image prompt: ${prompt}. Describe visual elements, style, composition, colors, and subjects. and style. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
+        userPrompt = `Create an image prompt: ${prompt}. Describe visual elements, style, composition, colors, and subjects. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
       } else {
         userPrompt = `Create a video prompt: ${prompt}. Outline content, scenes, transitions, and style. Output ONLY the prompt text with no greetings, explanations, offers to generate other content, or extra commentary.`;
       }
 
-      // Try GET approach first since that worked in your test
-      const params = new URLSearchParams({
-        model: "openai",
-        system: systemPrompt,
-        prompt: userPrompt,
-        temperature: "0.4",
-        top_p: "0.8",
-        private: "true",
-        stream: "true"
-      });
-
-      const url = `https://text.pollinations.ai/${params.toString()}`;
-      console.log('Sending GET request to:', url.substring(0, 100) + '...');
-
-      // Use fetch with GET request and send referrer as header
-      const response = await fetch(url, {
-        method: 'GET',
+      const fetchResponse = await fetch('https://gen.pollinations.ai/v1/chat/completions', {
+        method: 'POST',
         headers: {
-          'Accept': 'text/event-stream',
-          'Referrer': 'promptzy',
-          'X-Referrer': 'promptzy'
-        }
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: getModel(),
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt },
+          ],
+          stream: true,
+          temperature: 0.4,
+          seed: -1,
+        }),
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('API Error Response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+      if (!fetchResponse.ok) {
+        const errorText = await fetchResponse.text();
+        throw new Error(`API error ${fetchResponse.status}: ${errorText}`);
       }
 
-      if (!response.body) {
+      if (!fetchResponse.body) {
         throw new Error('No response body received');
       }
 
-      // Check if response is streaming or plain text
-      const contentType = response.headers.get('content-type') || '';
-      console.log('Content-Type:', contentType);
+      const reader = fetchResponse.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      let hasReceivedContent = false;
 
-      if (contentType.includes('text/event-stream')) {
-        // Handle Server-Sent Events streaming
-        const reader = response.body!.getReader();
-        const decoder = new TextDecoder();
-        let fullText = '';
-        let hasReceivedContent = false;
+      eventSourceRef.current = { close: () => reader.cancel() };
 
-        // Store the reader in the ref for cleanup
-        eventSourceRef.current = { close: () => reader.cancel() };
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-        try {
-          while (true) {
-            const { done, value } = await reader.read();
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
 
-            if (done) {
-              break;
-            }
+          for (const line of lines) {
+            if (line.trim() === '' || !line.startsWith('data: ')) continue;
+            const data = line.slice(6);
+            if (data === '[DONE]') break;
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-
-            for (const line of lines) {
-              if (line.trim() === '') continue;
-              if (line.startsWith('data: ')) {
-                const data = line.slice(6); // Remove 'data: ' prefix
-
-                if (data === '[DONE]') {
-                  // Stream is complete
-                  break;
-                }
-
-                try {
-                  const parsedData = JSON.parse(data);
-                  // Check for content in the delta if this is a streaming chunk
-                  if (parsedData.choices && parsedData.choices[0] && parsedData.choices[0].delta) {
-                    const content = parsedData.choices[0].delta.content;
-                    if (content) {
-                      fullText += content;
-                      hasReceivedContent = true;
-
-                      setResponse({
-                        text: fullText,
-                        loading: true,
-                        error: null
-                      });
-                    }
-                  }
-                } catch (parseError) {
-                  // If we can't parse as JSON, treat as plain text
-                  fullText += data;
-                  hasReceivedContent = true;
-                  setResponse({
-                    text: fullText,
-                    loading: true,
-                    error: null
-                  });
-                }
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                fullText += content;
+                hasReceivedContent = true;
+                setResponse({ text: fullText, loading: true, error: null });
               }
+            } catch {
+              // non-JSON chunk — skip
             }
           }
-
-          // Stream completed successfully
-          setResponse({
-            text: fullText,
-            loading: false,
-            error: null
-          });
-
-        } catch (streamError) {
-          // Handle streaming errors
-          if (!hasReceivedContent || !fullText.trim()) {
-            setResponse({
-              text: fullText || "",
-              loading: false,
-              error: streamError instanceof Error ? streamError.message : "Failed to generate content"
-            });
-
-            toast({
-              title: "Error",
-              description: "Failed to generate content. Please try again.",
-              variant: "destructive",
-            });
-          } else {
-            // We received content before the error, so treat it as a success
-            setResponse({
-              text: fullText,
-              loading: false,
-              error: null
-            });
-          }
-        } finally {
-          eventSourceRef.current = null;
         }
-      } else {
-        // Handle plain text response (non-streaming)
-        const text = await response.text();
-        console.log('Plain text response:', text);
 
-        setResponse({
-          text: text,
-          loading: false,
-          error: null
-        });
+        setResponse({ text: fullText, loading: false, error: null });
+      } catch (streamError) {
+        if (!hasReceivedContent || !fullText.trim()) {
+          setResponse({
+            text: '',
+            loading: false,
+            error: streamError instanceof Error ? streamError.message : "Failed to generate content",
+          });
+          toast({ title: "Error", description: "Failed to generate content. Please try again.", variant: "destructive" });
+        } else {
+          setResponse({ text: fullText, loading: false, error: null });
+        }
+      } finally {
+        eventSourceRef.current = null;
       }
-
-
     } catch (error) {
       setResponse({
         text: "",
         loading: false,
         error: error instanceof Error ? error.message : "Failed to generate content"
       });
-
-      toast({
-        title: "Error",
-        description: "Failed to generate content. Please try again.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to generate content. Please try again.", variant: "destructive" });
     }
   };
 

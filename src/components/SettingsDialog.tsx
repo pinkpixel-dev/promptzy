@@ -50,6 +50,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
   const [showDbSetupGuide, setShowDbSetupGuide] = useState<boolean>(false);
 
+  const [pollinationsApiKey, setPollinationsApiKey] = useState<string>(() => {
+    return localStorage.getItem('pollinations-api-key') || (import.meta.env.VITE_POLLINATIONS_API_KEY as string | undefined) || '';
+  });
+  const [pollinationsModel, setPollinationsModel] = useState<string>(() => {
+    return localStorage.getItem('pollinations-model') || 'gemini-fast';
+  });
   const [customSystemPrompt, setCustomSystemPrompt] = useState<string>(() => {
     return localStorage.getItem('ai-system-prompt') || SYSTEM_PROMPT_DEFAULT;
   });
@@ -366,6 +372,20 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         variant: "destructive"
       });
       return;
+    }
+
+    // Save Pollinations API key
+    if (pollinationsApiKey.trim()) {
+      localStorage.setItem('pollinations-api-key', pollinationsApiKey.trim());
+    } else {
+      localStorage.removeItem('pollinations-api-key');
+    }
+
+    // Save Pollinations model
+    if (pollinationsModel.trim()) {
+      localStorage.setItem('pollinations-model', pollinationsModel.trim());
+    } else {
+      localStorage.setItem('pollinations-model', 'gemini-fast');
     }
 
     // Save system prompt settings
@@ -824,6 +844,43 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 <p className="text-xs text-muted-foreground">
                   Customize the system prompt used by the AI Assistant to generate prompts
                 </p>
+
+                <div className="space-y-2 pb-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="pollinations-key" className="text-sm">Pollinations API Key</Label>
+                    <button
+                      type="button"
+                      className="text-xs underline"
+                      style={{ color: "var(--accent-cyan)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                      onClick={() => window.open("https://enter.pollinations.ai", "_blank")}
+                    >
+                      Get a key
+                    </button>
+                  </div>
+                  <Input
+                    id="pollinations-key"
+                    type="password"
+                    placeholder="pk_…  or  sk_…"
+                    value={pollinationsApiKey}
+                    onChange={(e) => setPollinationsApiKey(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Required for AI prompt generation. Use a publishable <code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>pk_</code> key for client-side use.
+                  </p>
+                </div>
+
+                <div className="space-y-2 pb-2">
+                  <Label htmlFor="pollinations-model" className="text-sm">AI Model</Label>
+                  <Input
+                    id="pollinations-model"
+                    placeholder="gemini-fast"
+                    value={pollinationsModel}
+                    onChange={(e) => setPollinationsModel(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Default: <code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>gemini-fast</code>. See <button type="button" className="underline" style={{ color: "var(--accent-cyan)", background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => window.open("https://gen.pollinations.ai/api/docs", "_blank")}>Pollinations docs</button> for available models.
+                  </p>
+                </div>
 
                 <div className="flex items-center space-x-2 mb-2">
                   <Checkbox

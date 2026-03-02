@@ -13,12 +13,14 @@
 - **Tagging System:** Organize prompts with customizable tags and visual tag chips
 - **Search & Filter:** Full-text search and tag-based filtering with responsive masonry layout
 - **Manual Refresh:** Dedicated refresh button in header for syncing prompts after configuration changes
-- **AI Assistant:** Enhanced prompt generation using Pollinations.ai API with:
-  - Fetch-based streaming for improved reliability
-  - Header-based authentication (referrer sent as HTTP header)
-  - Aggressive anti-fluff system prompt to eliminate greetings and commentary
+- **AI Assistant:** Prompt generation using the Pollinations.ai API with:
+  - OpenAI-compatible `POST /v1/chat/completions` endpoint (`https://gen.pollinations.ai`)
+  - API key authentication — stored in Settings UI (`pollinations-api-key` localStorage); get a free key at [enter.pollinations.ai](https://enter.pollinations.ai)
+  - Configurable model (default: `gemini-fast`); stored in Settings UI (`pollinations-model` localStorage)
+  - SSE streaming via `fetch` + `ReadableStream` with ref-based cleanup on unmount
   - Support for system, task, image, and video prompt types
-  - Clean, direct output with no conversational elements
+  - Aggressive anti-fluff system prompt — output is raw prompt text only, no greetings or commentary
+  - Customisable system prompt via Settings; reset to default anytime
 - **Cloud Storage:**
   - Supabase-only storage for reliable cloud persistence
   - UUID validation and user management
@@ -61,7 +63,7 @@
   - Supabase JS SDK with custom client configuration
   - Cloud-only storage for reliable data persistence
   - UUID validation and proper error handling
-- **AI Integration:** Pollinations.ai API with streaming responses
+- **AI Integration:** Pollinations.ai API (`https://gen.pollinations.ai/v1/chat/completions`) with streaming responses, configurable model, and API key auth
 - **PWA Features:** vite-plugin-pwa v1.2 with Workbox for service worker and caching
 - **Notifications:** Sonner + custom toast hook for user feedback
 - **Theming:** Next-Themes for dark/light mode with custom animations
@@ -162,6 +164,7 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 
 ## ⚠️ Recent Changes & User Preferences
 
+- **✅ v1.4.1 Released:** Pollinations API migration to new endpoint, API key + model selection in Settings
 - **✅ v1.4.0 Released:** Glass theming, ShinyButton, Tailwind CSS v4, Database Setup Guide, major UI overhaul
 - **✅ Tailwind CSS v4:** Migrated to CSS-first architecture — `tailwind.config.ts` and `postcss.config.js` removed
 - **✅ ShinyButton Component:** New interactive button with cursor-tracking shine effects used throughout the UI

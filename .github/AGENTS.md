@@ -52,10 +52,14 @@ Credentials: default fallback baked into `src/integrations/supabase/client.ts` (
 
 ## 🤖 AI Integration (Pollinations)
 
-- **Free, no API key** — `GET https://text.pollinations.ai/{params}`, model `openai`
+- **Requires API key** — `POST https://gen.pollinations.ai/v1/chat/completions`, OpenAI-compatible
+- API key resolved in priority order: `VITE_POLLINATIONS_API_KEY` env var → `pollinations-api-key` localStorage
+- Key type: `pk_` (publishable/client-side, rate-limited) for browser builds; `sk_` for server-side only
+- Request body: `{ model: "openai", messages: [...], stream: true, temperature: 0.4, seed: -1 }`
+- Auth header: `Authorization: Bearer <key>`
 - SSE streaming via `fetch` + `ReadableStream`; ref cleanup on unmount
 - System prompt configurable in Settings → `localStorage` (`ai-system-prompt`)
-- Required headers: `Referrer: promptzy`, `X-Referrer: promptzy`
+- Pollinations API key configurable in Settings → `localStorage` (`pollinations-api-key`)
 - See [pollinations.md](../pollinations.md) for full API reference
 
 ## 🚀 Deployment

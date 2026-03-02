@@ -5,6 +5,20 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-03-01
+
+### Changed
+
+- **🤖 Pollinations API Migration:** Completely migrated AI Assistant from the deprecated `GET https://text.pollinations.ai/` endpoint to the new OpenAI-compatible `POST https://gen.pollinations.ai/v1/chat/completions` API
+- **🔑 API Key Required:** Pollinations now requires an API key for all generation requests; key is stored in Settings → `pollinations-api-key` localStorage — get one free at [enter.pollinations.ai](https://enter.pollinations.ai)
+- **🧠 Model Selection:** Added configurable model field in Settings (default: `gemini-fast` — Google Gemini 2.5 Flash Lite); any Pollinations text model can be specified
+- **⚙️ Settings UI:** Added "Pollinations API Key" and "AI Model" inputs to the AI Assistant Configuration section in Settings — no environment variables needed
+- **🧹 Cleanup:** Removed all legacy debug `console.log` calls from the AI streaming flow; removed unused `top_p` / `private` query params
+
+### Fixed
+
+- **📡 Streaming Reliability:** Simplified SSE delta parser — skips non-JSON lines cleanly instead of falling back to raw text accumulation
+
 ## [1.4.0] - 2026-03-01
 
 ### Added
