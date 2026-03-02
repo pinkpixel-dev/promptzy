@@ -1,5 +1,5 @@
 import { supabase, getSupabaseCredentials } from "@/integrations/supabase/client";
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Prompt, Tag } from "@/types";
 
 // Regex to validate UUID strings
@@ -59,8 +59,78 @@ DROP POLICY IF EXISTS "Temporary allow all" ON prompts;
 CREATE POLICY "Allow all operations for now" ON prompts FOR ALL USING (true);
 `;
 
+// Full setup SQL for the database setup guide (complete script with migration support)
+export const FULL_SETUP_SQL = `-- 🚀 Promptzy - Supabase Setup Script
+-- Run this in your Supabase SQL Editor to set up the database
+
+-- ============================================================================
+-- 1. CREATE THE PROMPTS TABLE (if it doesn't exist)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS prompts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  content TEXT NOT NULL,
+  tags TEXT[] DEFAULT '{}',
+  createdat TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  title TEXT,
+  category TEXT DEFAULT 'task',
+  description TEXT DEFAULT '',
+  user_id TEXT NOT NULL,
+  ispublic BOOLEAN DEFAULT false,
+  likes INTEGER DEFAULT 0,
+  views INTEGER DEFAULT 0,
+  comments INTEGER DEFAULT 0
+);
+
+-- ============================================================================
+-- 2. ADD MISSING COLUMNS (if your table already exists)
+-- ============================================================================
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                   WHERE table_name = 'prompts' AND column_name = 'user_id') THEN
+        ALTER TABLE prompts ADD COLUMN user_id TEXT;
+        UPDATE prompts SET user_id = 'legacy-user' WHERE user_id IS NULL;
+        ALTER TABLE prompts ALTER COLUMN user_id SET NOT NULL;
+    END IF;
+END $$;
+
+-- ============================================================================
+-- 3. CREATE INDEXES FOR BETTER PERFORMANCE
+-- ============================================================================
+
+CREATE INDEX IF NOT EXISTS idx_prompts_user_id ON prompts(user_id);
+CREATE INDEX IF NOT EXISTS idx_prompts_createdat ON prompts(createdat);
+CREATE INDEX IF NOT EXISTS idx_prompts_tags ON prompts USING GIN(tags);
+
+-- ============================================================================
+-- 4. ENABLE ROW LEVEL SECURITY (RLS)
+-- ============================================================================
+
+ALTER TABLE prompts ENABLE ROW LEVEL SECURITY;
+
+-- ============================================================================
+-- 5. DROP ANY EXISTING POLICIES (clean slate)
+-- ============================================================================
+
+DROP POLICY IF EXISTS "Users can view their own prompts" ON prompts;
+DROP POLICY IF EXISTS "Users can insert their own prompts" ON prompts;
+DROP POLICY IF EXISTS "Users can update their own prompts" ON prompts;
+DROP POLICY IF EXISTS "Users can delete their own prompts" ON prompts;
+DROP POLICY IF EXISTS "Allow all access" ON prompts;
+DROP POLICY IF EXISTS "Temporary allow all" ON prompts;
+
+-- ============================================================================
+-- 6. CREATE PERMISSIVE RLS POLICIES
+-- ============================================================================
+
+CREATE POLICY "Allow all operations for now" ON prompts FOR ALL USING (true);
+`;
+
 // Cache for the current client to avoid creating multiple instances
-let cachedClient: ReturnType<typeof createClient> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let cachedClient: SupabaseClient<any> | null = null;
 let cachedCredentials: { url: string; key: string } | null = null;
 
 // Helper function to create a fresh client with current credentials
@@ -88,7 +158,8 @@ export const clearClientCache = () => {
 };
 
 // Function to check if the prompts table exists
-export const checkTableExists = async (client: ReturnType<typeof createClient>): Promise<boolean> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const checkTableExists = async (client: SupabaseClient<any>): Promise<boolean> => {
   try {
     console.log("Checking if prompts table exists...");
     const { error } = await client.from('prompts').select('id').limit(1);
@@ -111,7 +182,8 @@ export const checkTableExists = async (client: ReturnType<typeof createClient>):
 // Users must create the table manually using the SQL Editor in their Supabase dashboard.
 
 // Function to check if the prompts table exists
-const ensurePromptsTable = async (client: ReturnType<typeof createClient>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ensurePromptsTable = async (client: SupabaseClient<any>) => {
   try {
     // Check if table exists
     const tableExists = await checkTableExists(client);
@@ -129,7 +201,8 @@ const ensurePromptsTable = async (client: ReturnType<typeof createClient>) => {
 };
 
 // Function to get a consistent user ID (either from auth or user-defined)
-const getUserId = async (client: ReturnType<typeof createClient>): Promise<string> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getUserId = async (client: SupabaseClient<any>): Promise<string> => {
   try {
     // First try to get authenticated user ID
     const { data: sessionData } = await client.auth.getSession();

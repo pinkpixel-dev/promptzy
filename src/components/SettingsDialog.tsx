@@ -6,9 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Settings, CheckCircle, AlertCircle, Sparkles, RefreshCw, Database as DatabaseIcon, Copy, ExternalLink } from "lucide-react";
+import { Settings, CheckCircle, AlertCircle, Sparkles, RefreshCw, Database as DatabaseIcon, Copy, ExternalLink, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { testSupabaseConnection, checkTableExists, CREATE_TABLE_SQL, getSupabaseDiagnostics, setCustomUserId, getCurrentUserId, clearClientCache } from "@/lib/supabasePromptStore";
+import { testSupabaseConnection, checkTableExists, CREATE_TABLE_SQL, FULL_SETUP_SQL, getSupabaseDiagnostics, setCustomUserId, getCurrentUserId, clearClientCache } from "@/lib/supabasePromptStore";
 import { saveSystemPrompt, setUseDefaultPrompt, isUsingDefaultPrompt } from "@/lib/systemPromptStore";
 import ShinyButton from "@/components/ShinyButton";
 import { SYSTEM_PROMPT_DEFAULT } from "@/components/AIAssistant";
@@ -48,6 +48,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [showDiagnostics, setShowDiagnostics] = useState<boolean>(false);
   const [diagnosticsData, setDiagnosticsData] = useState<Record<string, unknown> | null>(null);
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
+  const [showDbSetupGuide, setShowDbSetupGuide] = useState<boolean>(false);
 
   const [customSystemPrompt, setCustomSystemPrompt] = useState<string>(() => {
     return localStorage.getItem('ai-system-prompt') || SYSTEM_PROMPT_DEFAULT;
@@ -78,6 +79,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         }
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const handleCustomUserIdChange = (newUserId: string) => {
@@ -184,7 +186,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
       // Check if table exists
       const client = createSupabaseClient();
-      const tableExists = await checkTableExists(client);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tableExists = await checkTableExists(client as any);
 
       if (tableExists) {
         setTableStatus("exists");
@@ -267,6 +270,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     });
   };
 
+  const handleCopyFullSql = () => {
+    navigator.clipboard.writeText(FULL_SETUP_SQL.trim());
+    toast({
+      title: "Setup SQL Copied",
+      description: "Full database setup SQL copied to clipboard."
+    });
+  };
+
 
 
   const openSupabaseSqlEditor = () => {
@@ -336,7 +347,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
       // Check if table exists - but don't block saving if it doesn't
       const client = createSupabaseClient();
-      const tableExists = await checkTableExists(client);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const tableExists = await checkTableExists(client as any);
 
       if (!tableExists) {
         toast({
@@ -372,6 +384,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   };
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-6xl w-[95vw] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
@@ -611,7 +624,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
                           {diagnosticsData.error && (
                             <div className="mt-2 text-red-600">
-                              <span className="font-medium">Error:</span> {diagnosticsData.error}
+                              <span className="font-medium">Error:</span> {String(diagnosticsData.error)}
                             </div>
                           )}
 
@@ -767,7 +780,43 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
             {/* Right Column - AI Assistant Configuration */}
             <div className="space-y-6">
-              <div className="space-y-4 p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
+                <div className="space-y-4 p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
+                                  <div className="p-3 rounded-xl flex items-start gap-3" style={{ background: "rgba(244,63,142,0.07)", border: "1px solid rgba(244,63,142,0.20)" }}>
+                  <div className="mt-0.5 shrink-0" style={{ color: "var(--accent-rose)" }}>
+                    <DatabaseIcon className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium mb-1" style={{ color: "var(--accent-rose)" }}>
+                      Supabase Database Required
+                    </p>
+                    <p className="text-xs mb-2" style={{ color: "var(--text-soft)" }}>
+                      Promptzy requires a Supabase database to store your prompts. You'll need to create a free project and run the setup SQL before the app will work. No database = no prompts saved!
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setShowDbSetupGuide(true)}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200"
+                      style={{
+                        background: "rgba(244,63,142,0.15)",
+                        border: "1px solid rgba(244,63,142,0.40)",
+                        color: "#f43f8e",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.28)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(244,63,142,0.28)";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.15)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                      }}
+                    >
+                      <BookOpen className="h-3.5 w-3.5" />
+                      Database Setup Guide
+                    </button>
+                  </div>
+                  </div>
+                  
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4" style={{ color: "var(--accent-rose)" }} />
                   <h3 className="text-sm font-medium" style={{ color: "var(--text-strong)" }}>AI Assistant Configuration</h3>
@@ -851,7 +900,138 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+
+    {/* Database Setup Guide Modal */}
+    <Dialog open={showDbSetupGuide} onOpenChange={(open) => !open && setShowDbSetupGuide(false)}>
+      <DialogContent className="sm:max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <DatabaseIcon className="h-5 w-5" style={{ color: "var(--accent-cyan)" }} />
+            Database Setup Guide
+          </DialogTitle>
+          <DialogDescription>
+            Follow these steps to set up your Supabase database so Promptzy can store your prompts.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-5 py-2">
+          {/* Step 1 */}
+          <div className="space-y-1.5">
+            <h4 className="text-sm font-semibold flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold" style={{ background: "rgba(34,211,238,0.18)", color: "#22d3ee", border: "1px solid rgba(34,211,238,0.40)" }}>1</span>
+              Create a free Supabase project
+            </h4>
+            <p className="text-xs pl-7" style={{ color: "var(--text-soft)" }}>
+              Head to{" "}
+              <button
+                type="button"
+                className="underline font-medium"
+                style={{ color: "var(--accent-cyan)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                onClick={() => window.open("https://supabase.com", "_blank")}
+              >
+                supabase.com
+              </button>
+              {" "}and sign up for free. Create a new project and wait for it to initialize (usually under a minute).
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="space-y-1.5">
+            <h4 className="text-sm font-semibold flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold" style={{ background: "rgba(34,211,238,0.18)", color: "#22d3ee", border: "1px solid rgba(34,211,238,0.40)" }}>2</span>
+              Get your project credentials
+            </h4>
+            <ol className="text-xs pl-7 space-y-1 list-decimal list-inside" style={{ color: "var(--text-soft)" }}>
+              <li>In your Supabase project dashboard, go to <strong>Project Settings → API</strong></li>
+              <li>Copy the <strong>Project URL</strong> (e.g. <code className="text-xs px-1 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>https://xyz.supabase.co</code>)</li>
+              <li>Copy the <strong>anon / public</strong> API key (not the service role key)</li>
+              <li>Paste both into the Supabase Configuration fields on the left</li>
+            </ol>
+          </div>
+
+          {/* Step 3 */}
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold" style={{ background: "rgba(34,211,238,0.18)", color: "#22d3ee", border: "1px solid rgba(34,211,238,0.40)" }}>3</span>
+              Run the setup SQL
+            </h4>
+            <p className="text-xs pl-7" style={{ color: "var(--text-soft)" }}>
+              In your Supabase dashboard, go to the <strong>SQL Editor</strong>, create a new query, paste the SQL below, and click <strong>Run</strong>.
+            </p>
+
+            <div className="relative rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.12)" }}>
+              <div className="flex items-center justify-between px-3 py-2" style={{ background: "rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                <span className="text-xs font-mono" style={{ color: "var(--text-soft)" }}>setup.sql</span>
+                <button
+                  type="button"
+                  onClick={handleCopyFullSql}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-md transition-all duration-200"
+                  style={{
+                    background: "rgba(34,211,238,0.14)",
+                    border: "1px solid rgba(34,211,238,0.35)",
+                    color: "#22d3ee",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.26)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.14)";
+                  }}
+                >
+                  <Copy className="h-3 w-3" />
+                  Copy SQL
+                </button>
+              </div>
+              <pre className="text-xs p-3 overflow-x-auto" style={{ background: "rgba(0,0,0,0.35)", color: "#a5f3fc", maxHeight: "300px", overflowY: "auto" }}>{FULL_SETUP_SQL.trim()}</pre>
+            </div>
+          </div>
+
+          {/* Step 4 */}
+          <div className="space-y-1.5">
+            <h4 className="text-sm font-semibold flex items-center gap-2" style={{ color: "var(--accent-cyan)" }}>
+              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full text-xs font-bold" style={{ background: "rgba(34,211,238,0.18)", color: "#22d3ee", border: "1px solid rgba(34,211,238,0.40)" }}>4</span>
+              Connect and save
+            </h4>
+            <p className="text-xs pl-7" style={{ color: "var(--text-soft)" }}>
+              Back in this settings panel, enter your URL and anon key, click <strong>Connect</strong> to verify, then click <strong>Save Changes</strong>. Refresh the page and you're all set!
+            </p>
+          </div>
+
+          {/* Tip box */}
+          <div className="p-3 rounded-xl text-xs" style={{ background: "rgba(34,211,238,0.06)", border: "1px solid rgba(34,211,238,0.18)" }}>
+            <p className="font-medium mb-1" style={{ color: "var(--accent-cyan)" }}>💡 Pro tip — sync across devices</p>
+            <p style={{ color: "var(--text-soft)" }}>
+              Set a <strong>Custom User ID</strong> in the Supabase Configuration section. Any device that uses the same User ID (and the same Supabase project) will see all the same prompts.
+            </p>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button
+            variant="outline"
+            onClick={() => setShowDbSetupGuide(false)}
+            className="transition-all duration-200"
+            style={{
+              background: "rgba(34,211,238,0.10)",
+              border: "1px solid rgba(34,211,238,0.30)",
+              color: "#22d3ee",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.20)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(34,211,238,0.25)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.10)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+          >
+            Got it!
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>  );
 };
 
 export default SettingsDialog;
