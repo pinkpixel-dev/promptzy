@@ -9,12 +9,12 @@
 <div align="center">
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.3.2-green.svg)
+![Version](https://img.shields.io/badge/version-1.4.0-green.svg)
 ![NPM](https://img.shields.io/npm/v/@pinkpixel/promptzy?color=red)
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)
-![Vite](https://img.shields.io/badge/Vite-5.4.19-646CFF?logo=vite)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.11-38B2AC?logo=tailwind-css)
+![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?logo=tailwind-css)
 ![Supabase](https://img.shields.io/badge/Supabase-2.49.7-3ECF8E?logo=supabase)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
@@ -56,6 +56,7 @@ promptzy
 Promptzy will start on `http://localhost:4173` and open automatically in your browser!
 
 **Alternative commands:**
+
 ```bash
 # Legacy commands still work
 prompt-dashboard
@@ -94,17 +95,20 @@ yarn dev
 Promptzy can be installed as a mobile app directly from your browser! No app store needed.
 
 **On Mobile (iOS/Android):**
+
 1. Visit the Promptzy website in your mobile browser
 2. Look for "Add to Home Screen" or "Install App" popup
 3. Tap "Install" or "Add"
 4. Promptzy will appear on your home screen like a native app!
 
 **On Desktop (Chrome/Edge):**
+
 1. Visit the website
 2. Look for the install icon in the address bar
 3. Click to install as a desktop app
 
 **Benefits of the Mobile App:**
+
 - 📱 Native app experience with no browser UI
 - ⚡ Faster loading and offline functionality
 - 🔄 Automatic updates when new versions are released
@@ -122,30 +126,28 @@ For deploying to Cloudflare Pages or other platforms, see the [DEPLOYMENT.md](DE
 To use promptzy you will need to set up a table on Supabase. They have a free tier and the setup is very easy to do.
 
 1. Create a Supabase account and project at [supabase.com](https://supabase.com). Once you have an account set up, create a project. At the top of your project page, you should see a button that says "Connect." Click on that button, and then click on the 2nd tab. You should see a screen that gives you a supabase url, and an anon key. You can also find this information in your project settings, you will see a project id, and your anon key will be located in the api keys section.
-   
+
 Now that you have this information, return to Promptzy.
 
 2. Configure your Supabase credentials:
-
    - Open Promptzy
    - Go to Settings (gear icon)
    - Select "Supabase" as your storage option
    - Enter your Supabase Project URL and API Key
      - Find these in your Supabase dashboard under Project Settings → API
    - Click "Connect" to verify your credentials
-     
-3. Create the required database table:
 
+3. Create the required database table:
    - After connecting, you'll need to set up the prompts table manually. You should see the instructions appear after entering your credentials.
    - Click the "Open SQL Editor" button in the settings
    - Copy the SQL code provided in the settings (or use the SQL from `supabase-setup.sql`)
    - Paste and run it in the Supabase SQL Editor
-     
+
 4. Return to Promptzy and click "Connect" again to verify the table setup
 5. Save your settings
 6. Use the "Refresh" button in the header to load your prompts
 
-   **Note:** Automatic table creation isn't supported by Supabase for security reasons, so this one-time manual setup is required. You should only have to do this once per browser. After setup, use the refresh button to ensure prompts load properly, especially on       mobile devices.
+   **Note:** Automatic table creation isn't supported by Supabase for security reasons, so this one-time manual setup is required. You should only have to do this once per browser. After setup, use the refresh button to ensure prompts load properly, especially on mobile devices.
 
 The application will now use your Supabase instance for cloud storage! The cloud storage is ideal because it allows you to access your prompt database from any browser, computer or mobile device, and with Supabase's free tier you will have plenty of storage space for your prompts.
 
@@ -161,14 +163,14 @@ The application will now use your Supabase instance for cloud storage! The cloud
 
 ## 🧩 Tech Stack
 
-- React 18.3 with TypeScript
-- Vite for fast builds
-- Tailwind CSS
-- Shadcn/UI components
+- React 19 with TypeScript 5.8
+- Vite 6 for fast builds + `@tailwindcss/vite` plugin
+- **Tailwind CSS v4** (CSS-first architecture, no PostCSS config needed)
+- Shadcn/UI components (Radix UI primitives)
 - TanStack Query
 - React Hook Form with Zod
-- Supabase for auth and storage
-- PWA (Progressive Web App) with Workbox
+- Supabase for cloud storage
+- PWA (Progressive Web App) with Workbox (vite-plugin-pwa v1.2)
 - Cloudflare Pages for deployment
 
 ## 📋 Roadmap

@@ -5,21 +5,42 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-03-01
+## [1.4.0] - 2026-03-01
+
+### Added
+
+- **✨ ShinyButton Component:** New interactive `ShinyButton` component with real-time cursor-tracking shine effects — radial gradient highlights follow mouse position, metallic sheen stripes on hover, three sizes (sm, default, lg), and customizable hex accent color; used in the Settings dialog and other key UI areas
+- **🪟 Glass Theming System:** New `.glass` and `.glass__bar` CSS utility classes for a unified glassmorphism visual language across the UI — backdrop blur, translucent fills, and border highlights keyed to the theme palette
+- **🎨 Accent Color Palette:** Defined CSS custom properties for a structured accent palette: cyan (`#22d3ee`), yellow (`#facc15`), and rose-pink (`#F3397E`) — used consistently across buttons, labels, and decorative UI elements
+- **📖 Database Setup Guide (in-app):** Comprehensive step-by-step Database Setup Guide embedded directly in the Settings dialog, covering Supabase project creation, table SQL, and troubleshooting, so users never need to leave the app
+- **🔬 Supabase Diagnostics Panel:** New diagnostics section in SettingsDialog reveals connection health, detected table schema, current user ID, and error details for quick troubleshooting
+- **🧩 supabasePromptStore Utilities:** Added `getSupabaseDiagnostics`, `FULL_SETUP_SQL`, `clearClientCache`, `setCustomUserId`, and `getCurrentUserId` exports for richer connection management from the Settings UI
 
 ### Changed
 
-- **⚡ Tailwind CSS v4 Migration:** Upgraded from Tailwind CSS v3.4 to v4.x — the new CSS-first architecture with `@import "tailwindcss"`, `@theme {}`, `@plugin`, and `@custom-variant` replaces the old PostCSS + `tailwind.config.ts` setup entirely
+- **⚡ Tailwind CSS v4 Migration:** Upgraded from Tailwind CSS v3.4 to v4.x (^4.2.1) — the new CSS-first architecture with `@import "tailwindcss"`, `@theme {}`, `@plugin`, and `@custom-variant` replaces the old PostCSS + `tailwind.config.ts` setup entirely
 - **🔌 @tailwindcss/vite Plugin:** Replaced the PostCSS pipeline with the official `@tailwindcss/vite` plugin; Tailwind is now processed natively inside Vite — faster, simpler, no PostCSS config needed
-- **🎨 CSS-First Theme Config:** All design tokens (colors, border-radius, screens, animations) migrated from `tailwind.config.ts` into a `@theme {}` block in `src/index.css` — single source of truth in CSS
+- **🎨 CSS-First Theme Config:** All design tokens (colors, border-radius, screens, animations) migrated from `tailwind.config.ts` into a `@theme {}` / `@layer base` block in `src/index.css` — single source of truth in CSS
 - **📦 vite-plugin-pwa v1.2.0:** Upgraded from v0.19.8 (Vite 7 support was missing); added `serialize-javascript` override to patch the upstream vulnerability chain
 - **🗑️ Removed Files:** Deleted `tailwind.config.ts` and `postcss.config.js` — no longer needed with the v4 Vite plugin
+- **🖼️ Header Redesign:** Header rebuilt with gradient text logo (cyan→yellow→rose), cyan-accented refresh button with glow on hover, glass background, and `ShinyButton`-powered "Add Prompt" action
+- **🏷️ TagFilter Redesign:** Tag pills redesigned with uppercase tracking labels and distinct active/inactive glass-style states
+- **🔖 TagInput Redesign:** Tag input revamped with new button styles, hover highlights, and improved remove-tag UX
+- **🔍 SearchInput Redesign:** Search input visually overhauled with updated focus ring and icon styling
+- **🃏 PromptCard Enhancement:** Cards enhanced with updated typography, copy feedback, and improved expand/collapse layout
+- **📭 EmptyState Redesign:** Empty state screens redesigned with updated icons, messaging, and styling
+- **🤖 AIAssistant Panel:** AI panel styling refreshed with updated layout, button styles, and glass integration
+- **💬 Toast/Dialog Styling:** Toast notifications and dialogs updated for visual consistency with the new theme
+- **🖼️ App Icons Updated:** Logo and app icons replaced with higher-quality versions across `logo.png`, `public/favicon.png`, and `public/icon.png`
+- **🗂️ Index Page Layout:** Search and tag filter area wrapped in a glass panel for a polished floating-card appearance
+- **⚙️ SettingsDialog:** Imports updated to use `ShinyButton`; connection section enhanced with the new in-app setup guide and diagnostics panel
 
 ### Fixed
 
 - **🔒 Security:** Resolved 4 high-severity vulnerabilities in `serialize-javascript`, `@rollup/plugin-terser`, `workbox-build`, and `vite-plugin-pwa` via npm `overrides` and package upgrades
 - **🐛 TypeScript:** Removed unnecessary `as any` cast in `AIAssistant.tsx` — the ref type already matched
 - **🔧 ESLint Errors:** Fixed `no-empty-object-type` in `textarea.tsx` and `command.tsx` (empty interfaces converted to type aliases)
+- **🖼️ Delete Dialog Styling:** Delete confirmation dialog restyled to match the new glass theme
 
 ## [1.3.2] - 2025-07-16
 

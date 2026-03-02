@@ -1,6 +1,6 @@
 # ✨ Promptzy 🎯
 
-**Last Updated:** 2025-07-16T06:16:45.391Z
+**Last Updated:** 2026-03-01
 
 ## Project Overview
 
@@ -26,20 +26,23 @@
   - Fixed critical bug where prompts saved to hardcoded URL instead of user's configured URL
   - Row Level Security (RLS) policies for data protection
 - **Advanced UI/UX:**
+  - Glass theming system (`.glass` / `.glass__bar`) for consistent glassmorphism across panels
+  - `ShinyButton` component with real-time cursor-tracking shine effects
+  - Redesigned Header with gradient text logo and cyan accent buttons
+  - Redesigned TagFilter, TagInput, SearchInput, PromptCard, EmptyState
   - Responsive masonry layout (1-3 columns based on screen size)
   - Expandable prompt cards with copy functionality
   - Delete confirmation dialogs with "don't show again" option
   - Empty state handling for filtered and unfiltered views
   - Mobile-optimized responsive design with proper touch targets
   - Enhanced accessibility with proper DialogDescription components
-  - Improved dialog UX with contextual descriptions
 - **Progressive Web App (PWA):**
   - Installable as mobile app directly from browser
   - Service worker for offline functionality and caching
   - Native app experience with no browser UI
   - Auto-updates and home screen installation
   - Manual refresh button for mobile PWA sync after Supabase setup
-- **Settings & Configuration:** Comprehensive settings dialog with Supabase connection testing and system prompt management
+- **Settings & Configuration:** Comprehensive settings dialog with in-app Database Setup Guide, Supabase connection testing & diagnostics, and AI system prompt management
 - **Theming & Responsive Design:** Custom purple theme with dark/light mode support and smooth animations
 - **Global Installation:** npm global installation support with CLI commands (`promptzy`, `prompt-dashboard`, `ai-prompt-dashboard`)
 - **Production Ready:** Cloudflare Pages deployment with automated CI/CD and proper SPA routing
@@ -47,9 +50,10 @@
 ## 🛠️ Technical Stack
 
 - **Framework:** React 19.1 (TypeScript)
-- **Bundler & Dev Server:** Vite 5.4 with React SWC plugin
-- **Styling:** Tailwind CSS with custom purple theme + Radix UI primitives (via Shadcn UI)
-- **Component Library:** Shadcn UI & Radix primitives (40+ components)
+- **Bundler & Dev Server:** Vite 6 with React SWC plugin + `@tailwindcss/vite` for native Tailwind processing
+- **Styling:** Tailwind CSS v4 (CSS-first architecture, `@import "tailwindcss"`, no PostCSS/config file) + Radix UI primitives (via Shadcn UI)
+- **Component Library:** Shadcn UI & Radix primitives (40+ components) + custom `ShinyButton` with cursor-tracking shine effects
+- **Glass Theming:** `.glass` / `.glass__bar` utility classes for glassmorphism panels; accent palette: cyan, yellow, rose-pink
 - **State Management:** React Hooks with sophisticated local state management
 - **Routing:** React Router v7 with SPA routing configuration
 - **Forms & Validation:** React Hook Form & Zod for type-safe form handling
@@ -58,7 +62,7 @@
   - Cloud-only storage for reliable data persistence
   - UUID validation and proper error handling
 - **AI Integration:** Pollinations.ai API with streaming responses
-- **PWA Features:** Vite PWA plugin with Workbox for service worker and caching
+- **PWA Features:** vite-plugin-pwa v1.2 with Workbox for service worker and caching
 - **Notifications:** Sonner + custom toast hook for user feedback
 - **Theming:** Next-Themes for dark/light mode with custom animations
 - **Icons:** Lucide React (consistent icon system)
@@ -69,10 +73,9 @@
 
 - **TypeScript:** v5.8 with relaxed strictness for rapid development
 - **Linting:** ESLint v9 flat config with React hooks and TypeScript support
-- **Styling:** PostCSS & Tailwind CSS with custom animations and purple theme
+- **Styling:** Tailwind CSS v4 (CSS-first via `src/index.css` `@theme {}` block) — `tailwind.config.ts` and `postcss.config.js` removed
 - **Deployment:** Cloudflare Pages with wrangler.toml configuration
-- **SPA Routing:** _routes.json for proper client-side routing on Cloudflare Pages
-- **CI/CD:** GitHub Actions workflow for automated deployment on main branch pushes
+- **SPA Routing:** \_routes.json for proper client-side routing on Cloudflare Pages
 - **Package Management:** npm with lockfile for consistent dependencies
 
 ## 📁 Project Structure
@@ -84,20 +87,29 @@ promptzy/
 ├── src/                    # Source code
 │   ├── components/         # UI components
 │   │   ├── AIAssistant.tsx      # Collapsible AI prompt generator with streaming
+│   │   ├── AnimatedLogo.tsx     # Interactive logo with hover sound + animation
+│   │   ├── EmptyState.tsx       # Contextual empty state screens
+│   │   ├── Header.tsx           # App header with gradient logo, refresh, settings
 │   │   ├── PromptCard.tsx       # Expandable prompt cards with type badges
 │   │   ├── PromptForm.tsx       # Modal form for creating/editing prompts
-│   │   ├── TagInput.tsx         # Tag management with keyboard support
 │   │   ├── SearchInput.tsx      # Search input with icon
-│   │   ├── TagFilter.tsx        # Tag filtering buttons
-│   │   ├── EmptyState.tsx       # Contextual empty states
-│   │   ├── Header.tsx           # App header with refresh, settings, and add buttons
-│   │   ├── SettingsDialog.tsx   # Comprehensive settings modal
+│   │   ├── SettingsDialog.tsx   # Settings modal with Database Setup Guide & diagnostics
+│   │   ├── ShinyButton.tsx      # Custom button with cursor-tracking shine effects
+│   │   ├── TagFilter.tsx        # Tag filtering pill buttons
+│   │   ├── TagInput.tsx         # Tag management with keyboard support
 │   │   └── ui/                  # Shadcn UI & Radix primitives (40+ components)
 │   ├── hooks/              # Custom React hooks (use-toast, use-mobile)
 │   ├── integrations/       # Third-party SDKs
 │   │   └── supabase/       # Supabase client with custom configuration
 │   ├── lib/                # Business logic & data stores
-│   │   ├── supabasePromptStore.ts # Supabase cloud storage with UUID validation
+│   │   ├── supabasePromptStore.ts # Supabase cloud storage, diagnostics, client cache
+│   │   ├── systemPromptStore.ts # AI assistant system prompt management
+│   │   └── utils.ts             # Utility functions
+│   ├── pages/              # Route pages (Index, NotFound)
+│   └── types/              # TypeScript definitions
+├── dist/                   # Build output directory
+├── wrangler.toml           # Cloudflare Pages config
+└── vite.config.ts          # Vite config (includes @tailwindcss/vite plugin)
 │   │   ├── systemPromptStore.ts # AI assistant system prompt management
 │   │   └── utils.ts             # Utility functions
 │   ├── pages/              # Route pages (Index, NotFound)
@@ -114,6 +126,7 @@ promptzy/
 ## 🚀 Getting Started
 
 ### Global Installation (Recommended)
+
 ```bash
 # Install globally from npm
 npm install -g @pinkpixel/promptzy
@@ -126,6 +139,7 @@ ai-prompt-dashboard
 ```
 
 ### Local Development
+
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -142,23 +156,25 @@ ai-prompt-dashboard
 The project is configured for deployment to Cloudflare Pages using Wrangler. The key configuration files are:
 
 - **wrangler.toml**: Defines the project name, build output directory, and environment variables
-- **_routes.json**: Handles SPA routing by serving index.html for all non-asset routes
+- **\_routes.json**: Handles SPA routing by serving index.html for all non-asset routes
 
 For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) guide.
 
 ## ⚠️ Recent Changes & User Preferences
 
+- **✅ v1.4.0 Released:** Glass theming, ShinyButton, Tailwind CSS v4, Database Setup Guide, major UI overhaul
+- **✅ Tailwind CSS v4:** Migrated to CSS-first architecture — `tailwind.config.ts` and `postcss.config.js` removed
+- **✅ ShinyButton Component:** New interactive button with cursor-tracking shine effects used throughout the UI
+- **✅ Glass Theming System:** `.glass` / `.glass__bar` classes applied site-wide for glassmorphism aesthetic
+- **✅ Database Setup Guide:** Built directly into SettingsDialog — users can follow setup steps without leaving the app
+- **✅ Supabase Diagnostics:** New diagnostics panel in settings for connection troubleshooting
+- **✅ Security Patched:** 4 high-severity npm vulnerabilities resolved
 - **✅ Storage Simplified:** Removed localStorage and sync functionality - now uses Supabase-only storage for reliability
-- **✅ Sync Issues Resolved:** Eliminated prompt duplication and cross-browser sync problems by removing hybrid storage
 - **✅ Manual Refresh Button:** Added refresh button in header to solve mobile PWA sync issues after Supabase configuration
 - **✅ Global CLI Support:** Added npm global installation with `promptzy`, `prompt-dashboard` and `ai-prompt-dashboard` commands
 - **✅ Progressive Web App:** Added PWA functionality for mobile app installation directly from browser
-- **✅ Mobile Responsive:** Fixed mobile layout issues with header, buttons, and AI assistant panel
-- **✅ Clean Settings:** Removed default Supabase credentials - settings form now starts blank
 - **Authentication:** User prefers login-based authentication system with multiple options (Google, GitHub, email/password) over anonymous user IDs
-- **✅ Cloud Operations:** All CRUD operations now properly update Supabase database with proper error handling
 - **✅ Rebranded to Promptzy:** Updated from "AI Prompt Dashboard" to "Promptzy" with cute new branding and logo
-- **✅ Version Updated:** Current version 1.3.3 with PWA functionality, mobile optimization, and refresh functionality
 
 ## 🔮 Future Enhancements
 
@@ -173,4 +189,5 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 - **Search Enhancement:** Semantic search with embedding-based similarity
 
 ---
-*Made with ❤️ by Pink Pixel*
+
+_Made with ❤️ by Pink Pixel_
