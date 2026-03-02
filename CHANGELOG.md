@@ -32,8 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - macOS traffic-light / `hiddenInset` title bar; proper dock behaviour
   - Dev mode loads the Vite dev server (`http://localhost:8080`) automatically
 - **📦 Linux Binary Releases:** Pre-built Linux packages published to Cloudflare R2
-  - **Debian / Ubuntu / Mint (`.deb`):** [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb)
-  - **Universal Linux (`.AppImage`):** [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)
+  - **Debian / Ubuntu / Mint (`.deb`):** [Promptzy-1.4.3-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb)
+  - **Universal Linux (`.AppImage`):** [Promptzy-1.4.3.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage)
 - **🐳 Docker Support:** Multi-stage Docker build for self-hosted deployments
   - Stage 1 — Node 20 Alpine compiles the Vite SPA with optional `VITE_*` build args for baking in credentials
   - Stage 2 — Nginx 1.27 Alpine serves static assets; SPA-aware `try_files` routing, security headers, gzip compression, and smart cache policies (immutable for hashed assets, no-cache for HTML)

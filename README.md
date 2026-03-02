@@ -126,22 +126,22 @@ Download the native desktop app for Linux — no browser required.
 
 | Package                | Format      | Download                                                                                                 |
 | ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
-| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb) |
-| Universal Linux        | `.AppImage` | [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)   |
+| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.3-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb) |
+| Universal Linux        | `.AppImage` | [Promptzy-1.4.3.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage)   |
 
 **Install the `.deb` package:**
 
 ```bash
-wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb
-sudo dpkg -i Promptzy-1.4.1-amd64.deb
+wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb
+sudo dpkg -i Promptzy-1.4.3-amd64.deb
 ```
 
 **Run the `.AppImage` (no install needed):**
 
 ```bash
-wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage
-chmod +x Promptzy-1.4.1.AppImage
-./Promptzy-1.4.1.AppImage
+wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage
+chmod +x Promptzy-1.4.3.AppImage
+./Promptzy-1.4.3.AppImage
 ```
 
 ### 🐳 Docker
