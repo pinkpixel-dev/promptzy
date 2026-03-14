@@ -41,7 +41,7 @@
 ## 🖥️ Screenshots
 
 <p align="center">
-  <img src="https://res.cloudinary.com/di7ctlowx/image/upload/v1748492164/dashboard_c6krgr.png" alt="Screenshot" width="800" />
+  <img src="./screenshot.png" alt="Screenshot" width="800" />
 </p>
 
 ## 🛠️ Installation
