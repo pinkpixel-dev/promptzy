@@ -4,7 +4,7 @@
   <img src="./logo.png" alt="Promptzy Logo" width="250" height="250" />
 </p>
 
-**Promptzy** - A modern, cute web application for managing and organizing your AI prompts, with tagging, search, and cloud storage.
+**Promptzy** - A web/desktop application for managing and organizing your AI prompts, with tagging, search, and cloud storage.
 
 <div align="center">
 
