@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 dist-electron
+dist-electron-smoke
 *.local
 
 # Editor directories and files
@@ -29,4 +30,3 @@ pollinations.md
 supabasekeys.md
 mybuttons.txt
 pretty-elements.txt
-

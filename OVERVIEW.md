@@ -1,6 +1,6 @@
 # ✨ Promptzy 🎯
 
-**Last Updated:** 2026-03-02
+**Last Updated:** 2026-07-11
 
 ## Project Overview
 
@@ -30,6 +30,7 @@
   - Row Level Security (RLS) policies for data protection
 - **Advanced UI/UX:**
   - Glass theming system (`.glass` / `.glass__bar`) for consistent glassmorphism across panels
+  - Dark charcoal page background without colored ambient blobs
   - `ShinyButton` component with real-time cursor-tracking shine effects
   - Redesigned Header with gradient text logo and cyan accent buttons
   - Redesigned TagFilter, TagInput, SearchInput, PromptCard, EmptyState
@@ -46,7 +47,7 @@
   - Auto-updates and home screen installation
   - Manual refresh button for mobile PWA sync after Supabase setup
 - **Settings & Configuration:** Comprehensive settings dialog with in-app Database Setup Guide, Supabase connection testing & diagnostics, and AI system prompt management
-- **Theming & Responsive Design:** Custom purple theme with dark/light mode support and smooth animations
+- **Theming & Responsive Design:** Dark charcoal theme with glass surfaces, accent colors, dark/light mode support, and smooth animations
 - **Global Installation:** npm global installation support with CLI commands (`promptzy`, `prompt-dashboard`, `ai-prompt-dashboard`)
 - **Docker:** Multi-stage Nginx Docker image for self-hosted deployments; `docker compose up --build` one-liner; supports `VITE_*` build-arg credentials
 - **Electron Desktop App:** Native Linux desktop app (`.deb` and `.AppImage`); secure `contextIsolation` preload; custom `app://` protocol for SPA routing in packaged builds; native app menu, context menus, and external link handling
@@ -71,7 +72,7 @@
   - UUID validation and proper error handling
 - **AI Integration:** Pollinations.ai API (`https://gen.pollinations.ai/v1/chat/completions`) with streaming responses, configurable model, and API key auth
 - **PWA Features:** vite-plugin-pwa v1.2 with Workbox for service worker and caching
-- **Electron 34:** Native desktop app — `electron/main.cjs` (main process) + `electron/preload.cjs` (sandboxed contextBridge); packaged via `electron-builder` to `.deb` and `.AppImage`
+- **Electron 43:** Native desktop app — `electron/main.cjs` (main process) + `electron/preload.cjs` (sandboxed contextBridge); packaged via `electron-builder` to `.deb` and `.AppImage`
 - **Docker:** Multi-stage `Dockerfile` (Node 20 build → Nginx 1.27 serve) + `nginx.conf` (SPA routing, security headers, gzip) + `docker-compose.yml`
 - **Notifications:** Sonner + custom toast hook for user feedback
 - **Theming:** Next-Themes for dark/light mode with custom animations
@@ -169,6 +170,11 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 
 ## ⚠️ Recent Changes & User Preferences
 
+- **✅ Background Simplified:** Replaced colored ambient background blobs with a simple dark charcoal app background
+- **✅ Dependency Audit Clean:** Updated vulnerable npm dependencies, including Electron and electron-builder, so `npm audit` reports zero vulnerabilities
+- **✅ Electron Protocol Hardening:** Added a path-boundary check to the packaged app's custom `app://` handler before serving files from `dist/`
+- **✅ Electron Builder Config Updated:** Moved Linux desktop-entry metadata to the current electron-builder config shape
+- **✅ Smoke Test Output Ignored:** Added generated Electron packaging smoke-test output to `.gitignore`
 - **✅ v1.4.2 Released:** Electron desktop app (Linux `.deb` & `.AppImage`), Docker self-hosted deployment, new download links
 - **✅ v1.4.1 Released:** Pollinations API migration to new endpoint, API key + model selection in Settings
 - **✅ v1.4.0 Released:** Glass theming, ShinyButton, Tailwind CSS v4, Database Setup Guide, major UI overhaul

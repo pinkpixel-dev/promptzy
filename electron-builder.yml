@@ -97,9 +97,10 @@ linux:
   description: "AI Prompt Manager — organise and manage your AI prompts"
   artifactName: "${productName}-${version}-${arch}.${ext}"
   desktop:
-    Name: Promptzy
-    Comment: AI Prompt Manager
-    Categories: Utility;Office;
+    entry:
+      Name: Promptzy
+      Comment: AI Prompt Manager
+      Categories: Utility;Office;
 
 # ── Auto-updates (uncomment to enable GitHub releases)  ───────────────────────
 # publish:

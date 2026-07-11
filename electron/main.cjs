@@ -137,7 +137,7 @@ function createWindow() {
       nodeIntegration:  false,
       sandbox:          true,
     },
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#141416',
     show:            false,
     icon:            path.join(__dirname, '../public/icon.png'),
     titleBarStyle:   process.platform === 'darwin' ? 'hiddenInset' : 'default',
@@ -187,18 +187,27 @@ app.whenReady().then(() => {
   protocol.handle('app', (request) => {
     const { pathname } = new URL(request.url);
     const distPath = path.join(__dirname, '../dist');
+    const indexPath = path.join(distPath, 'index.html');
 
     // Serve index.html for "/" and fall back for any unresolvable path (SPA routing)
     const filePath =
       pathname === '/'
-        ? path.join(distPath, 'index.html')
-        : path.join(distPath, pathname);
+        ? indexPath
+        : path.resolve(distPath, `.${pathname}`);
 
-    return net
-      .fetch(pathToFileURL(filePath).toString())
-      .catch(() =>
-        net.fetch(pathToFileURL(path.join(distPath, 'index.html')).toString()),
-      );
+    const relativePath = path.relative(distPath, filePath);
+    const isSafePath = relativePath && !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+
+    if (!isSafePath) {
+      return new Response('Bad request', {
+        status: 400,
+        headers: { 'content-type': 'text/plain' },
+      });
+    }
+
+    return net.fetch(pathToFileURL(filePath).toString()).catch(() =>
+      net.fetch(pathToFileURL(indexPath).toString()),
+    );
   });
 
   buildAppMenu();

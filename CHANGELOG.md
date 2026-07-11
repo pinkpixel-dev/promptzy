@@ -5,6 +5,19 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.4] - 2026-07-11
+
+### Changed
+
+- Replaced the colored ambient background blobs with a simple dark charcoal app background.
+- Updated vulnerable npm dependencies, including Electron and electron-builder, so `npm audit` reports zero vulnerabilities.
+- Updated the electron-builder Linux desktop-entry config for the current schema.
+- Ignored generated Electron packaging smoke-test output.
+
+### Security
+
+- Hardened the packaged app's custom `app://` protocol handler with a path-boundary check before serving files from `dist/`.
+
 ## [1.4.3] - 2026-03-02
 
 ### Added

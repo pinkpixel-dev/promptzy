@@ -98,7 +98,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ─── Background grid decoration ──────────────────────── */
+/* ─── Background decoration ───────────────────────────── */
 @keyframes bgPulse {
   0%, 100% { opacity: 0.03; }
   50%       { opacity: 0.06; }
@@ -171,51 +171,12 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: hsl(215, 25%, 8%);
+    background: #141416;
     color: hsl(210, 20%, 96%);
     position: relative;
   }
 
-  /* ── Layered background: ambient orbs + dot grid + noise grain ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background:
-      /* Ambient light orbs — big, saturated, these give the glass something to blur */
-      radial-gradient(ellipse 600px 500px at 15% 15%, rgba(34,211,238,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 500px 600px at 85% 80%, rgba(244,63,142,0.14)  0%, transparent 70%),
-      radial-gradient(ellipse 450px 400px at 55%  5%, rgba(251,191,36,0.16)  0%, transparent 65%),
-      radial-gradient(ellipse 350px 350px at 30% 85%, rgba(251,191,36,0.10)  0%, transparent 60%),
-      radial-gradient(ellipse 300px 300px at 70% 40%, rgba(34,211,238,0.08)  0%, transparent 55%),
-      /* Subtle dot grid for texture */
-      radial-gradient(circle 1px at center, rgba(255,255,255,0.08) 0%, transparent 100%);
-    background-size:
-      100% 100%,
-      100% 100%,
-      100% 100%,
-      100% 100%,
-      100% 100%,
-      24px 24px;
-    background-attachment: fixed;
-  }
-
-  /* Noise grain overlay — gives the dark background a textured, matte feel */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 180px 180px;
-  }
-
-  /* Ensure main content sits above the pseudo-element layers */
+  /* Keep main content layered predictably above the page background. */
   body > #root {
     position: relative;
     z-index: 1;
