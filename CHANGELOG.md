@@ -10,9 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Replaced the colored ambient background blobs with a simple dark charcoal app background.
+- Darkened the app background slightly for clearer separation from dark components.
+- Replaced the header's gradient Promptzy wordmark with a solid rose accent.
 - Updated vulnerable npm dependencies, including Electron and electron-builder, so `npm audit` reports zero vulnerabilities.
 - Updated the electron-builder Linux desktop-entry config for the current schema.
+- Set an explicit Linux executable name for Electron release packaging.
+- Set a Linux desktop name for cleaner window association in packaged builds.
+- Replaced direct Cloudflare R2 desktop download links with the GitHub Releases page.
+- Made the docs site's npm config compatible with npm by removing the pnpm-only public hoist setting.
+- Upgraded docs site dependencies to Astro 7, Starlight 0.41, and Sharp 0.35 with a clean npm lockfile.
+- Reworked the docs theme to remove gradient UI treatments and match the app's dark charcoal styling more closely.
 - Ignored generated Electron packaging smoke-test output.
+- Reduced the intensity of custom hover glows across header, form, settings, prompt card, and assistant controls.
+- Bumped the app version to `1.4.4`.
 
 ### Security
 
@@ -45,8 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - macOS traffic-light / `hiddenInset` title bar; proper dock behaviour
   - Dev mode loads the Vite dev server (`http://localhost:8080`) automatically
 - **📦 Linux Binary Releases:** Pre-built Linux packages published to Cloudflare R2
-  - **Debian / Ubuntu / Mint (`.deb`):** [Promptzy-1.4.3-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb)
-  - **Universal Linux (`.AppImage`):** [Promptzy-1.4.3.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage)
+  - Desktop downloads are now distributed from the [Promptzy GitHub Releases page](https://github.com/pinkpixel-dev/promptzy/releases)
 - **🐳 Docker Support:** Multi-stage Docker build for self-hosted deployments
   - Stage 1 — Node 20 Alpine compiles the Vite SPA with optional `VITE_*` build args for baking in credentials
   - Stage 2 — Nginx 1.27 Alpine serves static assets; SPA-aware `try_files` routing, security headers, gzip compression, and smart cache policies (immutable for hashed assets, no-cache for HTML)

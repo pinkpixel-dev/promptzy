@@ -71,7 +71,7 @@ export default function PromptCard({ prompt, onEdit, onDelete }: PromptCardProps
         "--card-hex": `${hex}80`,
         boxShadow: `0 0 0 0 ${hex}00`,
       } as React.CSSProperties}
-      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 10px 40px -10px ${hex}40`; }}
+      onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 18px -12px ${hex}33`; }}
       onMouseLeave={(e) => { e.currentTarget.style.boxShadow = `0 0 0 0 ${hex}00`; }}
     >
       <div className="prompt-card-inner">

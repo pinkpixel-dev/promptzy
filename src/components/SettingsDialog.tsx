@@ -499,15 +499,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         background: "rgba(34,211,238,0.12)",
                         border: "1px solid rgba(34,211,238,0.35)",
                         color: "#22d3ee",
-                        boxShadow: "0 0 10px rgba(34,211,238,0.12)",
+                        boxShadow: "0 0 6px rgba(34,211,238,0.08)",
                       }}
                       onMouseEnter={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.32)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.16)";
                       }}
                       onMouseLeave={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(34,211,238,0.08)";
                       }}
                     >
                       {isConnectionTesting ? (
@@ -545,15 +545,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         background: "rgba(251,191,36,0.12)",
                         border: "1px solid rgba(251,191,36,0.35)",
                         color: "#fbbf24",
-                        boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                        boxShadow: "0 0 6px rgba(251,191,36,0.08)",
                       }}
                       onMouseEnter={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.16)";
                       }}
                       onMouseLeave={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(251,191,36,0.08)";
                       }}
                     >
                       <RefreshCw className="h-4 w-4" />
@@ -571,15 +571,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         background: "rgba(244,63,142,0.12)",
                         border: "1px solid rgba(244,63,142,0.35)",
                         color: "#f43f8e",
-                        boxShadow: "0 0 10px rgba(244,63,142,0.12)",
+                        boxShadow: "0 0 6px rgba(244,63,142,0.08)",
                       }}
                       onMouseEnter={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.22)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(244,63,142,0.32)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(244,63,142,0.16)";
                       }}
                       onMouseLeave={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.12)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(244,63,142,0.12)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(244,63,142,0.08)";
                       }}
                     >
                       {isDiagnosing ? (
@@ -739,15 +739,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             background: "rgba(251,191,36,0.12)",
                             border: "1px solid rgba(251,191,36,0.35)",
                             color: "#fbbf24",
-                            boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                            boxShadow: "0 0 6px rgba(251,191,36,0.08)",
                           }}
                           onMouseEnter={e => {
                             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
-                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.16)";
                           }}
                           onMouseLeave={e => {
                             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
-                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(251,191,36,0.08)";
                           }}
                           onClick={openSupabaseSqlEditor}
                         >
@@ -762,15 +762,15 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                             background: "rgba(251,191,36,0.12)",
                             border: "1px solid rgba(251,191,36,0.35)",
                             color: "#fbbf24",
-                            boxShadow: "0 0 10px rgba(251,191,36,0.12)",
+                            boxShadow: "0 0 6px rgba(251,191,36,0.08)",
                           }}
                           onMouseEnter={e => {
                             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
-                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(251,191,36,0.32)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.16)";
                           }}
                           onMouseLeave={e => {
                             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
-                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.12)";
+                            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(251,191,36,0.08)";
                           }}
                           onClick={handleCopySql}
                         >
@@ -827,7 +827,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       }}
                       onMouseEnter={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.28)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(244,63,142,0.28)";
+                        (e.currentTarget as HTMLElement).style.boxShadow = "0 0 8px rgba(244,63,142,0.15)";
                       }}
                       onMouseLeave={e => {
                         (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.15)";
@@ -942,7 +942,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.20)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(244,63,142,0.30)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 9px rgba(244,63,142,0.16)";
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.10)";
@@ -1079,7 +1079,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.20)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 14px rgba(34,211,238,0.25)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 8px rgba(34,211,238,0.14)";
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.10)";

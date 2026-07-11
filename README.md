@@ -9,15 +9,15 @@
 <div align="center">
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-1.4.3-green.svg)
+![Version](https://img.shields.io/badge/version-1.4.4-green.svg)
 ![NPM](https://img.shields.io/npm/v/@pinkpixel/promptzy?color=red)
-![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?logo=typescript)
-![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?logo=vite)
+![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-7.x-646CFF?logo=vite)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?logo=tailwind-css)
-![Supabase](https://img.shields.io/badge/Supabase-2.49.7-3ECF8E?logo=supabase)
+![Supabase](https://img.shields.io/badge/Supabase-2.98-3ECF8E?logo=supabase)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Electron](https://img.shields.io/badge/Electron-34.x-47848F?logo=electron)
+![Electron](https://img.shields.io/badge/Electron-43.x-47848F?logo=electron)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
@@ -124,24 +124,19 @@ Promptzy can be installed as a mobile app directly from your browser! No app sto
 
 Download the native desktop app for Linux — no browser required.
 
-| Package                | Format      | Download                                                                                                 |
-| ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
-| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.3-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb) |
-| Universal Linux        | `.AppImage` | [Promptzy-1.4.3.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage)   |
+Download the latest `.deb` or `.AppImage` from the [Promptzy GitHub Releases page](https://github.com/pinkpixel-dev/promptzy/releases).
 
 **Install the `.deb` package:**
 
 ```bash
-wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb
-sudo dpkg -i Promptzy-1.4.3-amd64.deb
+sudo dpkg -i Promptzy-*-amd64.deb
 ```
 
 **Run the `.AppImage` (no install needed):**
 
 ```bash
-wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage
-chmod +x Promptzy-1.4.3.AppImage
-./Promptzy-1.4.3.AppImage
+chmod +x Promptzy-*-x86_64.AppImage
+./Promptzy-*-x86_64.AppImage
 ```
 
 ### 🐳 Docker

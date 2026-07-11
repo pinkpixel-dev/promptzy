@@ -171,7 +171,7 @@
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #141416;
+    background: #111113;
     color: hsl(210, 20%, 96%);
     position: relative;
   }
@@ -311,11 +311,11 @@
 
   .robot-logo {
     transition: all 0.3s ease-in-out;
-    filter: drop-shadow(0 0 6px rgba(34,211,238,0.25));
+    filter: drop-shadow(0 0 4px rgba(34,211,238,0.16));
   }
 
   .robot-logo-container:hover .robot-logo {
-    filter: drop-shadow(0 0 12px rgba(34,211,238,0.55));
+    filter: drop-shadow(0 0 8px rgba(34,211,238,0.32));
     transform: scale(1.1);
   }
 

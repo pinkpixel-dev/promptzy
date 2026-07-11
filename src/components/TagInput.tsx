@@ -51,15 +51,15 @@ const TagInput = ({ tags, onAddTag, onRemoveTag }: TagInputProps) => {
             background: "rgba(34,211,238,0.12)",
             border: "1px solid rgba(34,211,238,0.35)",
             color: "#22d3ee",
-            boxShadow: "0 0 10px rgba(34,211,238,0.12)",
+            boxShadow: "0 0 6px rgba(34,211,238,0.08)",
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(34,211,238,0.32)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.16)";
           }}
           onMouseLeave={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.12)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(34,211,238,0.08)";
           }}
         >
           <Plus className="w-4 h-4" />

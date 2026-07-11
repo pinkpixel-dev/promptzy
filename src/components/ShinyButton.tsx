@@ -49,7 +49,7 @@ const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(
         onPointerLeave={(e) => { setIsHovered(false); setMouseX(0.5); setMouseY(0.5); onPointerLeave?.(e); }}
         className={`group relative ${sizeClasses[size]} bg-zinc-800 overflow-hidden transition-transform duration-300 ease-out hover:scale-[1.02] active:scale-95 shadow-xl disabled:opacity-50 disabled:pointer-events-none ${className}`}
         style={{
-          boxShadow: isHovered ? `0 10px 40px -10px ${hex}66` : "0 10px 30px -10px rgba(0,0,0,0.5)",
+          boxShadow: isHovered ? `0 8px 20px -12px ${hex}40` : "0 8px 18px -12px rgba(0,0,0,0.45)",
           ...style,
         }}
       >

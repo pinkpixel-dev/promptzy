@@ -85,6 +85,8 @@ dmg:
 
 # ── Linux ─────────────────────────────────────────────────────────────────────
 linux:
+  executableName: promptzy
+  syncDesktopName: true
   target:
     - target: AppImage
       arch:

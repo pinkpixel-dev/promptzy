@@ -140,16 +140,12 @@ Run Promptzy as a self-hosted web app in a container.
 
 Native Electron app for Linux — no browser required.
 
-| Package                | Format      | Download                                                                                                 |
-| ---------------------- | ----------- | -------------------------------------------------------------------------------------------------------- |
-| Debian / Ubuntu / Mint | `.deb`      | [Promptzy-1.4.3-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb) |
-| Universal Linux        | `.AppImage` | [Promptzy-1.4.3.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage)   |
+Download the latest `.deb` or `.AppImage` from the [Promptzy GitHub Releases page](https://github.com/pinkpixel-dev/promptzy/releases).
 
 <Tabs>
   <TabItem label=".deb (Ubuntu / Debian)">
     ```bash
-    wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3-amd64.deb
-    sudo dpkg -i Promptzy-1.4.3-amd64.deb
+    sudo dpkg -i Promptzy-*-amd64.deb
     ```
 
     Launch **Promptzy** from your application menu or run `promptzy` in the terminal.
@@ -157,9 +153,8 @@ Native Electron app for Linux — no browser required.
   </TabItem>
   <TabItem label=".AppImage (Universal)">
     ```bash
-    wget https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.3.AppImage
-    chmod +x Promptzy-1.4.3.AppImage
-    ./Promptzy-1.4.3.AppImage
+    chmod +x Promptzy-*-x86_64.AppImage
+    ./Promptzy-*-x86_64.AppImage
     ```
 
     No installation needed — the AppImage runs anywhere.

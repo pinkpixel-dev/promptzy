@@ -22,11 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
           <h1
             className="text-2xl sm:text-3xl font-bold tracking-tight"
             style={{
-              background: "linear-gradient(90deg, #22d3ee 0%, #fbbf24 55%, #f43f8e 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(0 0 12px rgba(34,211,238,0.35))",
+              color: "var(--accent-rose)",
             }}
           >
             Promptzy
@@ -46,15 +42,15 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
             background: "rgba(34,211,238,0.12)",
             border: "1px solid rgba(34,211,238,0.35)",
             color: "#22d3ee",
-            boxShadow: "0 0 12px rgba(34,211,238,0.15)",
+            boxShadow: "0 0 6px rgba(34,211,238,0.10)",
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.22)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(34,211,238,0.35)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(34,211,238,0.18)";
           }}
           onMouseLeave={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(34,211,238,0.12)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(34,211,238,0.15)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(34,211,238,0.10)";
           }}
         >
           <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
@@ -71,15 +67,15 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
             background: "rgba(244,63,142,0.12)",
             border: "1px solid rgba(244,63,142,0.35)",
             color: "#f43f8e",
-            boxShadow: "0 0 12px rgba(244,63,142,0.15)",
+            boxShadow: "0 0 6px rgba(244,63,142,0.10)",
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.22)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(244,63,142,0.35)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(244,63,142,0.18)";
           }}
           onMouseLeave={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.12)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(244,63,142,0.15)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(244,63,142,0.10)";
           }}
         >
           <BookOpen className="h-4 w-4" />
@@ -95,15 +91,15 @@ const Header: React.FC<HeaderProps> = ({ onAddPrompt, onRefreshPrompts, isRefres
             background: "rgba(251,191,36,0.12)",
             border: "1px solid rgba(251,191,36,0.35)",
             color: "#fbbf24",
-            boxShadow: "0 0 12px rgba(251,191,36,0.15)",
+            boxShadow: "0 0 6px rgba(251,191,36,0.10)",
           }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.22)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 20px rgba(251,191,36,0.35)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 10px rgba(251,191,36,0.18)";
           }}
           onMouseLeave={e => {
             (e.currentTarget as HTMLElement).style.background = "rgba(251,191,36,0.12)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 12px rgba(251,191,36,0.15)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 6px rgba(251,191,36,0.10)";
           }}
         >
           <Settings className="h-4 w-4" />

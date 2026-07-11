@@ -32,7 +32,7 @@
   - Glass theming system (`.glass` / `.glass__bar`) for consistent glassmorphism across panels
   - Dark charcoal page background without colored ambient blobs
   - `ShinyButton` component with real-time cursor-tracking shine effects
-  - Redesigned Header with gradient text logo and cyan accent buttons
+  - Redesigned Header with solid rose wordmark and cyan accent buttons
   - Redesigned TagFilter, TagInput, SearchInput, PromptCard, EmptyState
   - Responsive masonry layout (1-3 columns based on screen size)
   - Expandable prompt cards with copy functionality
@@ -51,9 +51,7 @@
 - **Global Installation:** npm global installation support with CLI commands (`promptzy`, `prompt-dashboard`, `ai-prompt-dashboard`)
 - **Docker:** Multi-stage Nginx Docker image for self-hosted deployments; `docker compose up --build` one-liner; supports `VITE_*` build-arg credentials
 - **Electron Desktop App:** Native Linux desktop app (`.deb` and `.AppImage`); secure `contextIsolation` preload; custom `app://` protocol for SPA routing in packaged builds; native app menu, context menus, and external link handling
-- **Linux Binary Downloads:**
-  - [Promptzy-1.4.1-amd64.deb](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1-amd64.deb)
-  - [Promptzy-1.4.1.AppImage](https://pub-699cccf9e73e444da2db8cbfb168ab3a.r2.dev/Promptzy-1.4.1.AppImage)
+- **Linux Binary Downloads:** Latest `.deb` and `.AppImage` files are available from the [Promptzy GitHub Releases page](https://github.com/pinkpixel-dev/promptzy/releases)
 - **Production Ready:** Cloudflare Pages deployment with automated CI/CD and proper SPA routing
 
 ## 🛠️ Technical Stack
@@ -100,7 +98,7 @@ promptzy/
 │   │   ├── AIAssistant.tsx      # Collapsible AI prompt generator with streaming
 │   │   ├── AnimatedLogo.tsx     # Interactive logo with hover sound + animation
 │   │   ├── EmptyState.tsx       # Contextual empty state screens
-│   │   ├── Header.tsx           # App header with gradient logo, refresh, settings
+│   │   ├── Header.tsx           # App header with solid wordmark, refresh, settings
 │   │   ├── PromptCard.tsx       # Expandable prompt cards with type badges
 │   │   ├── PromptForm.tsx       # Modal form for creating/editing prompts
 │   │   ├── SearchInput.tsx      # Search input with icon
@@ -171,10 +169,19 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 ## ⚠️ Recent Changes & User Preferences
 
 - **✅ Background Simplified:** Replaced colored ambient background blobs with a simple dark charcoal app background
+- **✅ Background Adjusted:** Darkened the app background slightly while keeping it lighter than the darkest components
+- **✅ Header Wordmark Simplified:** Replaced the gradient Promptzy wordmark with a solid rose accent
+- **✅ Hover Glows Toned Down:** Reduced custom outer-glow intensity across interactive controls
 - **✅ Dependency Audit Clean:** Updated vulnerable npm dependencies, including Electron and electron-builder, so `npm audit` reports zero vulnerabilities
 - **✅ Electron Protocol Hardening:** Added a path-boundary check to the packaged app's custom `app://` handler before serving files from `dist/`
 - **✅ Electron Builder Config Updated:** Moved Linux desktop-entry metadata to the current electron-builder config shape
 - **✅ Smoke Test Output Ignored:** Added generated Electron packaging smoke-test output to `.gitignore`
+- **✅ Linux Executable Name Set:** Added an explicit `promptzy` executable name for Electron release packaging
+- **✅ Linux Desktop Name Set:** Added `promptzy.desktop` so packaged Linux builds associate windows more cleanly
+- **✅ v1.4.4 Prepared:** Bumped package metadata and rebuilt local Electron release artifacts
+- **✅ Release Downloads Simplified:** Replaced direct R2 desktop download links with the GitHub Releases page
+- **✅ Docs Dependencies Updated:** Upgraded the docs site to Astro 7, Starlight 0.41, and Sharp 0.35 with npm audit clean
+- **✅ Docs Theme Simplified:** Removed gradient UI treatments from the docs and aligned the site with the app's dark charcoal styling
 - **✅ v1.4.2 Released:** Electron desktop app (Linux `.deb` & `.AppImage`), Docker self-hosted deployment, new download links
 - **✅ v1.4.1 Released:** Pollinations API migration to new endpoint, API key + model selection in Settings
 - **✅ v1.4.0 Released:** Glass theming, ShinyButton, Tailwind CSS v4, Database Setup Guide, major UI overhaul

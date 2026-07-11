@@ -137,7 +137,7 @@ function createWindow() {
       nodeIntegration:  false,
       sandbox:          true,
     },
-    backgroundColor: '#141416',
+    backgroundColor: '#111113',
     show:            false,
     icon:            path.join(__dirname, '../public/icon.png'),
     titleBarStyle:   process.platform === 'darwin' ? 'hiddenInset' : 'default',

@@ -158,7 +158,7 @@ const PromptForm = ({ isOpen, onClose, onSave, editingPrompt }: PromptFormProps)
             }}
             onMouseEnter={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.20)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(244,63,142,0.30)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 9px rgba(244,63,142,0.16)";
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.background = "rgba(244,63,142,0.10)";
