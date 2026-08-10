@@ -35,6 +35,13 @@ export default defineConfig({
 					],
 				},
 				{
+					label: '🔐 Accounts & Upgrading',
+					items: [
+						{ label: 'Accounts & Security', slug: 'accounts-and-security' },
+						{ label: 'Upgrading to 2.0', slug: 'migrating-to-2' },
+					],
+				},
+				{
 					label: '✍️ Prompting Guide',
 					items: [
 						{ label: 'Prompt Engineering', slug: 'prompting-guide' },

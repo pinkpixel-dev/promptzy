@@ -46,9 +46,11 @@ App.tsx (QueryClientProvider + BrowserRouter)
 | `type`              | `category`  |
 | `createdAt`         | `createdat` |
 
-All mapping is manual in `src/lib/supabasePromptStore.ts`. **Any schema changes touch both the DB and transform functions.**
+Mapping lives in `src/lib/supabase/promptMapper.ts`. **Any schema changes touch both the DB and the mapper.**
 
-Credentials: default fallback baked into `src/integrations/supabase/client.ts` (public anon key by design); users can override via Settings dialog → `localStorage`. User ID: Supabase auth session → `custom-user-id` localStorage → auto-generated anon ID (priority order).
+Credentials: **no default project.** Resolution is Settings dialog → `localStorage`, then build-time `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY`. When neither is set, `getSupabaseClient()` returns `null` and `AuthGate` renders the setup screen. Do not add a fallback project.
+
+User ID: **`auth.uid()` only**, via `src/lib/supabase/auth.ts`. `getCurrentUserId()` returns `string | null`; null means signed out, and callers must do nothing rather than substitute an id.
 
 ## 🤖 AI Integration (Pollinations)
 
@@ -71,8 +73,8 @@ Credentials: default fallback baked into `src/integrations/supabase/client.ts` (
 ## ⚠️ Pitfalls to Know
 
 1. **DB field mapping** — always check `content`/`category`/`createdat` vs `text`/`type`/`createdAt` when touching Supabase code
-2. **No tests** — manually verify with `npm run dev` and `npm run build`
-3. **RLS is permissive** (`FOR ALL USING (true)`) — row isolation is enforced in query filters, not at DB level
+2. **Run the tests** — `npm test` (Vitest). `src/lib/supabase/setupSql.test.ts` asserts the shipped RLS policies; if it fails, you have reopened GHSA-x56f-9fqg-f568
+3. **RLS is the boundary** — policies scope every operation to `auth.uid()`, and `anon` is granted nothing. The `.eq('user_id', ...)` filters in `prompts.ts` are defence in depth; never present them as the security control, and never loosen the policies to "make something work"
 4. **React Query unused** — data fetching is direct `async/await`; don't assume query cache is populated
 5. **PWA off in prod** — don't troubleshoot PWA features on the deployed site; test locally with `npm run dev`
 

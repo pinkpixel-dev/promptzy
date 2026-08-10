@@ -1,0 +1,182 @@
+---
+title: Accounts & Security
+description: How Promptzy accounts work, how your prompts are protected, and how to back them up.
+---
+
+import { Steps, Aside } from "@astrojs/starlight/components";
+
+Promptzy 2.0 signs you in to an account that lives in **your own Supabase
+project**. That account is what makes your prompts yours, on every device.
+
+---
+
+## Creating your account
+
+Once you have entered your project URL and anon key and run the
+[setup script](/supabase-setup/), Promptzy shows a sign-in screen.
+
+<Steps>
+
+1. Choose **Need an account? Create one**.
+
+2. Enter an email address and a password of at least 6 characters.
+
+3. You are signed in and your prompts are ready.
+
+</Steps>
+
+<Aside type="caution" title="Turn off email confirmation first">
+  Supabase enables email confirmation by default, and its built-in email sender
+  is rate limited and meant for testing. Unless you have configured your own SMTP
+  provider, switch **Confirm email** off under **Authentication → Sign In /
+  Providers → Email** in the Supabase dashboard. Otherwise sign-up will appear to
+  work but you will not be able to sign in.
+</Aside>
+
+There is no password reset without SMTP configured, so pick something you can
+remember or store it in a password manager.
+
+---
+
+## Using Promptzy on more than one device
+
+Point each device at the same Supabase project and sign in with the same
+account.
+
+<Steps>
+
+1. Open Promptzy on the second device.
+
+2. In **Settings**, enter the same **Project URL** and **anon key**.
+
+3. Sign in with the same email and password.
+
+</Steps>
+
+Your prompts follow your account, so a phone and a laptop stay in step
+automatically.
+
+---
+
+## How your prompts are protected
+
+Every prompt row is owned by your Supabase Auth user id, which comes from a
+signed JWT issued when you sign in. Four Row Level Security policies compare that
+id against each row's `user_id`:
+
+| Operation | Check |
+| --- | --- |
+| `SELECT` | `USING (auth.uid()::text = user_id)` |
+| `INSERT` | `WITH CHECK (auth.uid()::text = user_id)` |
+| `UPDATE` | `USING` **and** `WITH CHECK` |
+| `DELETE` | `USING (auth.uid()::text = user_id)` |
+
+Each is scoped to the `authenticated` role, and the `anon` role is revoked from
+the table entirely. The `WITH CHECK` clauses are what stop a row being written
+under someone else's id.
+
+<Aside type="tip" title="The database is the boundary, not the app">
+  Promptzy also filters by `user_id` in its own queries, but that is defence in
+  depth. Even if a client skipped those filters entirely, the database would
+  still refuse. This is the difference that matters: your anon key is public by
+  design, and on its own it now gets an attacker nothing.
+</Aside>
+
+### There is no shared database
+
+Promptzy has no built-in Supabase project and no fallback. If you have not
+configured credentials, the app shows a setup screen rather than connecting
+somewhere you did not choose.
+
+<Aside type="caution" title="This was not true before 2.0">
+  Versions before 2.0 shipped a hardcoded project URL and anon key, so installs
+  that skipped configuration silently shared one database. See
+  [GHSA-x56f-9fqg-f568](https://github.com/pinkpixel-dev/promptzy/security/advisories/GHSA-x56f-9fqg-f568)
+  and [Upgrading to 2.0](/migrating-to-2/).
+</Aside>
+
+---
+
+## Backing up your prompts
+
+Worth doing before any upgrade, and worth doing occasionally regardless.
+
+### From inside Promptzy
+
+**Settings → Backup & Restore → Export prompts.** Downloads everything in your
+account as a JSON file named `promptzy-prompts-YYYY-MM-DD.json`. Keep it
+anywhere you like.
+
+To restore, **Import prompts** in the same place. Pick your file, check the
+count on the confirmation, and confirm.
+
+<Aside type="tip">
+  Import accepts Promptzy's own export files **and** raw table rows exported from
+  the Supabase SQL editor, so a backup taken either way can be restored. Entries
+  that cannot be read are listed on the confirmation and skipped rather than
+  imported broken.
+</Aside>
+
+<Aside type="note">
+  A prompt whose id matches one you already have replaces it. That makes
+  re-importing the same file safe to repeat: you get the same library, not
+  duplicates.
+</Aside>
+
+### From Supabase directly
+
+Useful if you cannot get into the app, or want a copy that does not depend on
+signing in.
+
+- **Table Editor** → `prompts` → the **…** menu → **Export data as CSV**
+- or **SQL Editor** → `SELECT * FROM prompts;` → **Download CSV**
+
+Your prompt text is in the `content` column, so the file stays readable on its
+own. For JSON that Promptzy's importer accepts directly:
+
+```sql
+SELECT json_agg(row_to_json(prompts)) FROM prompts;
+```
+
+Copy the single result cell into a `.json` file.
+
+### Keep a copy inside the database
+
+```sql
+CREATE TABLE prompts_backup AS SELECT * FROM prompts;
+```
+
+To restore from it later:
+
+```sql
+DELETE FROM prompts;
+INSERT INTO prompts SELECT * FROM prompts_backup;
+```
+
+---
+
+## Checking your setup
+
+**Settings → Diagnose** reports what Promptzy can see:
+
+| Field | What it means |
+| --- | --- |
+| `credentialProblem` | `null` when the URL and key look usable |
+| `authConnection` | Whether the project responded |
+| `signedIn` | Whether a session is active |
+| `tableExists` | Whether the `prompts` table is present |
+| `rlsEnforced` | `true` when a signed-out read is correctly refused |
+
+<Aside type="caution">
+  If `rlsEnforced` comes back `false`, the permissive policy from 1.x is still in
+  place and your prompts are readable by anyone with the anon key. Re-run the
+  [setup script](https://github.com/pinkpixel-dev/promptzy/blob/main/supabase-setup.sql)
+  straight away.
+</Aside>
+
+---
+
+## Signing out
+
+**Settings → Account → Sign out.** Your prompts stay in your database; signing
+back in brings them straight back.

@@ -1,0 +1,222 @@
+---
+title: Upgrading to 2.0
+description: Back up your prompts, run the new setup script, and reconnect your existing prompts to your new account.
+---
+
+import { Steps, Aside, Code } from "@astrojs/starlight/components";
+
+<Aside type="danger" title="Back up your prompts before you upgrade">
+  **After upgrading, Promptzy will look completely empty.** Every prompt is still
+  in your database, but it carries the old identifier and will not match your new
+  account until you run one `UPDATE` statement (step 5 below).
+
+  Nothing is deleted at any point. Even so, back up first — it takes ten seconds
+  and means a mistyped statement costs you nothing.
+</Aside>
+
+Promptzy 2.0 changes how the app decides which prompts are yours. It closes
+[GHSA-x56f-9fqg-f568](https://github.com/pinkpixel-dev/promptzy/security/advisories/GHSA-x56f-9fqg-f568),
+a critical vulnerability in every version before 2.0. Budget about five minutes.
+
+---
+
+## What changed, and why
+
+Promptzy 1.x identified you by a plain string: either a **Custom User ID** you
+typed into Settings, or a generated `anon-…` value kept in your browser. The
+database had a single policy, `FOR ALL USING (true)`, which permitted every
+operation to anyone.
+
+Together those meant that anyone holding the project's anon key — which ships in
+the client bundle of every deployment — could read, overwrite, or delete any
+prompt in the table. The `user_id` filter in the app was a convenience, not a
+security boundary. **A string the browser chooses is a string the browser can
+change.**
+
+2.0 replaces it with a real account:
+
+| | 1.x | 2.0 |
+| --- | --- | --- |
+| Identity | Any string you type | Supabase Auth user, verified by JWT |
+| Enforcement | App-side query filter | Database RLS policies on `auth.uid()` |
+| Delete path | Filtered by `id` only | Filtered by `id` and owner, plus RLS |
+| Default database | Hardcoded shared project | None; you configure your own |
+| Cross-device sync | Same typed string | Sign in with the same account |
+
+<Aside type="tip" title="Sync still works exactly the same">
+  Signing in on your phone with the same email and password gives you the same
+  prompts. Nothing about the day-to-day experience changes.
+</Aside>
+
+---
+
+## 1. Back up your prompts
+
+You are still on 1.x at this point, which has no export button, so this backup
+goes through Supabase. Do both.
+
+<Aside type="tip">
+  Once you are on 2.0 there is an **Export prompts** button in Settings →
+  Backup & Restore, so future backups take one click. The JSON you save in this
+  step can also be fed straight back through 2.0's **Import prompts**, which is a
+  useful safety net if step 5 does not go to plan.
+</Aside>
+
+### Copy the table inside the database
+
+In your project's **SQL Editor**:
+
+```sql
+CREATE TABLE prompts_backup_1x AS SELECT * FROM prompts;
+```
+
+A full, independent copy. If you ever need to undo:
+
+```sql
+DELETE FROM prompts;
+INSERT INTO prompts SELECT * FROM prompts_backup_1x;
+```
+
+Drop it with `DROP TABLE prompts_backup_1x;` once you have confirmed everything
+came across.
+
+### Download a copy off Supabase
+
+Either route works:
+
+- **Table Editor** → `prompts` → the **…** menu → **Export data as CSV**
+- **SQL Editor** → `SELECT * FROM prompts;` → **Download CSV**
+
+Save it somewhere real. Your prompt text is in the `content` column, so the file
+stays readable without Promptzy.
+
+Prefer JSON? Run this and copy the single result cell into a `.json` file:
+
+```sql
+SELECT json_agg(row_to_json(prompts)) FROM prompts;
+```
+
+---
+
+## 2. Note your old user ID
+
+```sql
+SELECT user_id, COUNT(*) FROM prompts GROUP BY user_id;
+```
+
+Write down what comes back. If you only ever used Promptzy yourself you will see
+one row, something like `sizzlebop` or `anon-1730000000000-a1b2c3d`. You need
+this in step 5.
+
+---
+
+## 3. Run the new setup script
+
+Copy [`supabase-setup.sql`](https://github.com/pinkpixel-dev/promptzy/blob/main/supabase-setup.sql)
+and run the whole thing in the SQL Editor. It is safe against an existing table.
+
+It drops the permissive `"Allow all operations for now"` policy, creates four
+ownership-scoped policies, and revokes the `anon` role's access.
+
+The verification queries at the bottom confirm it worked. The last one, checking
+`anon` grants, should return **no rows**.
+
+---
+
+## 4. Turn off email confirmation
+
+In the Supabase dashboard: **Authentication → Sign In / Providers → Email**, and
+switch off **Confirm email**.
+
+<Aside type="caution">
+  Supabase's built-in email service is rate limited and intended for testing. If
+  you leave confirmation on, you need your own SMTP provider configured before
+  you can create an account. For a personal install, off is simpler and costs you
+  nothing meaningful, since you control the database.
+
+  Leave it on if you would rather set up SMTP, or if other people use your
+  instance.
+</Aside>
+
+---
+
+## 5. Create your account, then claim your prompts
+
+<Steps>
+
+1. Open Promptzy. Enter your project URL and anon key if it asks, then choose
+   **Need an account? Create one** and sign up.
+
+2. **Your prompts will not be there yet.** That is expected — they still carry
+   the old `user_id` from step 2.
+
+3. Back in the SQL Editor, re-point them, filling in your own email and the old
+   value you noted:
+
+   ```sql
+   UPDATE prompts
+   SET user_id = (SELECT id::text FROM auth.users WHERE email = 'you@example.com')
+   WHERE user_id = 'the-old-value-from-step-2';
+   ```
+
+4. Refresh Promptzy. Everything should be back.
+
+</Steps>
+
+<Aside type="caution">
+  If more than one person's prompts share this table, run the `UPDATE` once per
+  person, matching each old value to the right account. **Do not run a blanket
+  `UPDATE` with no `WHERE` clause.**
+</Aside>
+
+If the statement reports `0 rows`, the subquery matched no user. Check which
+address you actually signed up with:
+
+```sql
+SELECT id, email FROM auth.users;
+```
+
+### Or skip the SQL entirely
+
+If you saved a JSON backup in step 1, you can restore it through the app instead:
+**Settings → Backup & Restore → Import prompts**. It reads raw Supabase table
+rows as well as Promptzy's own export format, and stamps everything with your new
+account as it goes.
+
+The `UPDATE` is tidier, since it moves your existing rows rather than writing new
+ones. Import is the better option if the `UPDATE` gave you trouble, or if you
+would simply rather not touch SQL again.
+
+---
+
+## 6. Sign in on your other devices
+
+Same email, same password, same project URL and anon key in Settings. That is all
+cross-device sync needs now.
+
+---
+
+## If you were using the built-in database
+
+1.x shipped with a hardcoded Supabase project as a fallback, so installs that
+never configured their own credentials were silently reading and writing a
+shared database. That fallback is gone in 2.0, and there is nothing to fall back
+on.
+
+If you never entered your own credentials in Settings, your prompts lived in that
+shared project, and 2.0 will show you the setup screen on first launch. Create
+your own Supabase project and start from step 3. Prompts stored in the old shared
+project are not recoverable through the app.
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+| --- | --- |
+| Signed in but no prompts | Step 5 is not done, or the old `user_id` in the `WHERE` clause did not match. Re-run the query from step 2. |
+| "Invalid credentials" on a new account | Email confirmation is still on. Confirm via email, or turn it off as in step 4. |
+| Row-level security error when saving | The setup script did not finish, or ran against a different project than the one in Settings. Re-run it. |
+| Settings → Diagnose says RLS is not enforced | The old permissive policy is still there. Re-run the setup script; section 5 drops it by name. |
+| "Failed to fetch" when connecting | Usually a malformed project URL. Clear the field completely and paste it fresh from Project Settings → API. |
+| Connect fails but everything looks right | Fixed in 2.0.0. Older builds read the database's refusal of anonymous reads as a connection failure, when it actually proves the policies work. |

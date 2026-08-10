@@ -17,7 +17,14 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+import { Card, CardGrid, LinkCard, Aside } from "@astrojs/starlight/components";
+
+<Aside type="caution" title="Upgrading from 1.x? Back up your prompts first">
+  Promptzy 2.0 is a security release that changes how prompt ownership works.
+  **After upgrading the app will look empty** until you run one `UPDATE`
+  statement. Nothing is deleted, but back up before you start and follow
+  [Upgrading to 2.0](/migrating-to-2/).
+</Aside>
 
 ## What is Promptzy?
 
@@ -30,7 +37,11 @@ import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
   </Card>
   <Card title="Cloud Sync" icon="cloud-upload">
     Supabase-backed storage keeps your prompt library in sync across every
-    device — phone, tablet, desktop.
+    device — phone, tablet, desktop. Sign in and your prompts are there.
+  </Card>
+  <Card title="Your Database, Your Prompts" icon="approve-check">
+    Prompts live in a Supabase project you own, protected by row-level security
+    policies that scope every read and write to your account.
   </Card>
   <Card title="AI Assistant" icon="rocket">
     Generate ready-to-use prompts with one click using the built-in AI
@@ -56,6 +67,16 @@ import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
     title="Supabase Setup"
     href="/supabase-setup/"
     description="Set up your free cloud database in under 5 minutes."
+  />
+  <LinkCard
+    title="Accounts & Security"
+    href="/accounts-and-security/"
+    description="Create your account, sync across devices, and back up your prompts."
+  />
+  <LinkCard
+    title="Upgrading to 2.0"
+    href="/migrating-to-2/"
+    description="Coming from 1.x? Back up, then reconnect your existing prompts."
   />
   <LinkCard
     title="AI Assistant"

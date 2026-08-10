@@ -7,6 +7,12 @@ import { Steps, Aside, Tabs, TabItem } from "@astrojs/starlight/components";
 
 Promptzy uses [Supabase](https://supabase.com) for cloud storage, giving you a private, synced prompt library accessible from any device. Supabase has a **generous free tier** — no credit card required.
 
+<Aside type="caution" title="Already running Promptzy 1.x?">
+  Do not run this page's script until you have read [Upgrading to
+  2.0](/migrating-to-2/). It walks you through backing up first, and through
+  reconnecting your existing prompts to your new account afterwards.
+</Aside>
+
 ---
 
 ## Create a Supabase Project
@@ -78,26 +84,56 @@ Supabase doesn't allow apps to auto-create tables for security reasons, so this 
    -- Enable Row Level Security
    ALTER TABLE prompts ENABLE ROW LEVEL SECURITY;
 
-   -- Permissive policy (allows all operations — restrict later if needed)
+   -- Remove the permissive policy shipped by Promptzy 1.x
    DROP POLICY IF EXISTS "Allow all operations for now" ON prompts;
-   CREATE POLICY "Allow all operations for now" ON prompts FOR ALL USING (true);
+
+   -- Scope every operation to the row's owner
+   CREATE POLICY "Users can view their own prompts"
+     ON prompts FOR SELECT TO authenticated
+     USING (auth.uid()::text = user_id);
+
+   CREATE POLICY "Users can insert their own prompts"
+     ON prompts FOR INSERT TO authenticated
+     WITH CHECK (auth.uid()::text = user_id);
+
+   CREATE POLICY "Users can update their own prompts"
+     ON prompts FOR UPDATE TO authenticated
+     USING (auth.uid()::text = user_id)
+     WITH CHECK (auth.uid()::text = user_id);
+
+   CREATE POLICY "Users can delete their own prompts"
+     ON prompts FOR DELETE TO authenticated
+     USING (auth.uid()::text = user_id);
+
+   -- The anon role gets nothing
+   REVOKE ALL ON prompts FROM anon;
+   GRANT SELECT, INSERT, UPDATE, DELETE ON prompts TO authenticated;
    ```
 
-   <Aside type="tip">
-     The full setup script is also available in the repository at
-     [`supabase-setup.sql`](https://github.com/pinkpixel-dev/promptzy/blob/main/supabase-setup.sql).
+   <Aside type="caution">
+     Run the complete script from
+     [`supabase-setup.sql`](https://github.com/pinkpixel-dev/promptzy/blob/main/supabase-setup.sql)
+     rather than the excerpt above. The excerpt leaves out the migration handling
+     for existing tables and the verification queries that confirm the policies
+     actually applied.
    </Aside>
 
-3. Return to Promptzy, click **Connect** again to verify the table was created, then **Save Changes**.
+3. Return to Promptzy and click **Connect** again to verify the table was created, then **Save Changes**.
 
-4. Click the **Refresh** button (🔄) in the Promptzy header to load your prompts.
+4. Create your account on the sign-in screen and you are ready to go.
 
 </Steps>
 
 <Aside type="note">
-  You only need to do this setup once per browser. After the initial setup, your
-  credentials are saved to `localStorage` and reconnect automatically on every
-  visit.
+  Your Supabase credentials are saved to `localStorage`, so a given browser only
+  needs step 1 once. Your account is stored in Supabase, so you sign in with the
+  same email and password on every device.
+</Aside>
+
+<Aside type="tip">
+  Supabase's built-in email sender is rate limited and meant for testing. For a
+  personal install, turn off **Confirm email** under Authentication → Sign In /
+  Providers → Email so you can create an account without configuring SMTP.
 </Aside>
 
 ---
@@ -111,19 +147,34 @@ VITE_SUPABASE_URL=https://xxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-These take precedence over any credentials entered in the Settings dialog.
+Anything entered in the Settings dialog takes precedence over these, so a
+prebuilt image can be pointed at a different project without rebuilding it.
+
+If neither is set, Promptzy shows its setup screen. There is no built-in
+database and no default project to fall back on.
 
 ---
 
 ## How User Identity Works
 
-Promptzy isolates your prompts by a **user ID** resolved in this order:
+Every prompt is owned by your **Supabase Auth user id**, which comes from a
+signed JWT issued when you sign in. Row Level Security policies compare that id
+against each row's `user_id` on reads, inserts, updates, and deletes, so the
+database enforces ownership on its own. The app's query filters are convenience,
+not the security boundary.
 
-1. Supabase auth session (if you sign in)
-2. `custom-user-id` stored in `localStorage`
-3. An auto-generated anonymous ID (created on first run)
+Because your account lives in Supabase rather than in your browser, signing in
+on a second device gives you the same prompts.
 
-This means your prompts are private to your browser/device by default — no account creation required.
+<Aside type="caution">
+  Promptzy 1.x resolved identity from a `custom-user-id` string in
+  `localStorage`, falling back to a generated anonymous id, and shipped a
+  `FOR ALL USING (true)` policy. A client-chosen identifier cannot be verified by
+  the database, so anyone with the project's anon key could read or modify any
+  prompt. See
+  [GHSA-x56f-9fqg-f568](https://github.com/pinkpixel-dev/promptzy/security/advisories/GHSA-x56f-9fqg-f568)
+  and the [2.0 migration guide](https://github.com/pinkpixel-dev/promptzy/blob/main/DOCS/MIGRATION-2.0.md).
+</Aside>
 
 ---
 
@@ -134,4 +185,7 @@ This means your prompts are private to your browser/device by default — no acc
 | "Cannot connect to Supabase"      | Double-check your Project URL and Anon Key — paste them fresh from the Supabase dashboard. |
 | Prompts not loading after setup   | Hit the **Refresh** button (🔄) in the Promptzy header.                                    |
 | "Table does not exist" error      | Run the SQL setup script in the Supabase SQL Editor (see above).                           |
-| Prompts missing on another device | Ensure you're using the same credentials on both devices.                                  |
+| Prompts missing on another device | Sign in with the same account, and check both devices point at the same project.           |
+| Can't sign in to a new account    | Email confirmation is probably still on. Confirm via email, or turn it off in Supabase.    |
+| Row-level security error on save  | The setup script did not finish, or it ran against a different project. Re-run it.         |
+| Prompts vanished after upgrading  | Expected on 1.x upgrades. Follow the [migration guide](https://github.com/pinkpixel-dev/promptzy/blob/main/DOCS/MIGRATION-2.0.md). |

@@ -1,6 +1,6 @@
 # ✨ Promptzy 🎯
 
-**Last Updated:** 2026-07-11
+**Last Updated:** 2026-08-10
 
 ## Project Overview
 
@@ -22,12 +22,21 @@
   - Support for system, task, image, and video prompt types
   - Aggressive anti-fluff system prompt — output is raw prompt text only, no greetings or commentary
   - Customisable system prompt via Settings; reset to default anytime
+- **Accounts & Security:**
+  - Supabase Auth email/password sign-in; prompt ownership is the verified `auth.uid()`
+  - Row Level Security policies scope select, insert, update, and delete to the owner, with `WITH CHECK` on writes
+  - `anon` role holds no grants on the `prompts` table
+  - No built-in or fallback Supabase project; the app is unusable until you configure your own
+  - Setup screen and auth gate stand in front of the app until both are satisfied
+- **Backup & Restore:**
+  - One-click JSON export of the signed-in user's whole prompt library
+  - Import accepts Promptzy exports and raw `prompts` table rows from the Supabase SQL editor
+  - Confirmation step shows the count and lists unreadable entries before anything is written
+  - Import is idempotent: a prompt whose id already exists is replaced, not duplicated
 - **Cloud Storage:**
   - Supabase-only storage for reliable cloud persistence
-  - UUID validation and user management
-  - Intelligent client caching to reduce multiple instance warnings
-  - Fixed critical bug where prompts saved to hardcoded URL instead of user's configured URL
-  - Row Level Security (RLS) policies for data protection
+  - UUID validation and prompt/row mapping isolated in `promptMapper.ts`
+  - Intelligent client caching keyed on URL + key, rebuilt when credentials change
 - **Advanced UI/UX:**
   - Glass theming system (`.glass` / `.glass__bar`) for consistent glassmorphism across panels
   - Dark charcoal page background without colored ambient blobs
@@ -102,6 +111,9 @@ promptzy/
 │   │   ├── PromptCard.tsx       # Expandable prompt cards with type badges
 │   │   ├── PromptForm.tsx       # Modal form for creating/editing prompts
 │   │   ├── SearchInput.tsx      # Search input with icon
+│   │   ├── AuthGate.tsx         # Gates the app on configuration + sign-in
+│   │   ├── PromptTransferSection.tsx # Export/import buttons and confirmation
+│   │   ├── auth/                # SignInPanel, SupabaseSetupNotice, AccountSection
 │   │   ├── SettingsDialog.tsx   # Settings modal with Database Setup Guide & diagnostics
 │   │   ├── ShinyButton.tsx      # Custom button with cursor-tracking shine effects
 │   │   ├── TagFilter.tsx        # Tag filtering pill buttons
@@ -111,7 +123,13 @@ promptzy/
 │   ├── integrations/       # Third-party SDKs
 │   │   └── supabase/       # Supabase client with custom configuration
 │   ├── lib/                # Business logic & data stores
-│   │   ├── supabasePromptStore.ts # Supabase cloud storage, diagnostics, client cache
+│   │   ├── supabase/            # Supabase modules (see below)
+│   │   │   ├── auth.ts          # Sign in/up/out, session, auth.uid() resolution
+│   │   │   ├── prompts.ts       # Prompt CRUD with owner filters
+│   │   │   ├── promptMapper.ts  # Row <-> Prompt mapping, UUID handling
+│   │   │   ├── diagnostics.ts   # Connection test, table check, RLS probe
+│   │   │   └── setupSql.ts      # Imports supabase-setup.sql as the single source
+│   │   ├── supabasePromptStore.ts # Barrel re-exporting the public surface
 │   │   ├── systemPromptStore.ts # AI assistant system prompt management
 │   │   └── utils.ts             # Utility functions
 │   ├── pages/              # Route pages (Index, NotFound)
@@ -169,6 +187,12 @@ For detailed deployment instructions, see the [DEPLOYMENT.md](DEPLOYMENT.md) gui
 ## ⚠️ Recent Changes & User Preferences
 
 - **✅ Background Simplified:** Replaced colored ambient background blobs with a simple dark charcoal app background
+- **✅ v2.0.0 Security Release:** Closed GHSA-x56f-9fqg-f568 — replaced the permissive `FOR ALL USING (true)` policy with four ownership-scoped RLS policies, removed the hardcoded fallback Supabase project, and replaced the client-chosen user ID with Supabase Auth
+- **✅ Auth Added:** Email/password sign-in, setup screen, auth gate, and an account section in Settings
+- **✅ Backup & Restore Added:** JSON export and import in Settings, accepting both Promptzy exports and raw Supabase table rows
+- **✅ Test Suite Added:** Vitest with 96 tests covering credentials, mapping, signed-out guards, backup/restore parsing, and the shipped RLS policies
+- **✅ Docker Env Vars Fixed:** `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` are now actually read; previously documented and accepted but never consumed
+- **✅ Store Modularised:** Split the 591-line `supabasePromptStore.ts` into focused modules under `src/lib/supabase/`
 - **✅ Background Adjusted:** Darkened the app background slightly while keeping it lighter than the darkest components
 - **✅ Header Wordmark Simplified:** Replaced the gradient Promptzy wordmark with a solid rose accent
 - **✅ Hover Glows Toned Down:** Reduced custom outer-glow intensity across interactive controls

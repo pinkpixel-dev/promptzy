@@ -62,18 +62,15 @@ App.tsx
 
 ## Supabase Usage Patterns
 
-**Credential storage:** Credentials live in `localStorage` (`custom-supabase-url`, `custom-supabase-key`). A hardcoded default project URL/anon-key is baked into [src/integrations/supabase/client.ts](src/integrations/supabase/client.ts) as a fallback — **this is a public anon key, intentional for an open-source project but worth noting.**
+**Credential storage:** Credentials live in `localStorage` (`custom-supabase-url`, `custom-supabase-key`), falling back to build-time `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` for Docker builds. **There is no hardcoded default project.** 1.x shipped one, which meant unconfigured installs shared a single database; that was removed in 2.0 and must not come back.
 
-**User identity:** Three-tier resolution in [src/lib/supabasePromptStore.ts](src/lib/supabasePromptStore.ts):
-1. Supabase authenticated session user ID
-2. Custom user ID from `localStorage` (`custom-user-id`)
-3. Auto-generated anonymous ID (`supabase-anonymous-id`)
+**User identity:** `auth.uid()` from a Supabase Auth session, resolved in [src/lib/supabase/auth.ts](src/lib/supabase/auth.ts). Email and password sign-in, no anonymous mode. `getCurrentUserId()` returns `string | null`, and null means every read returns empty and every write is refused.
 
 **Table schema:** Single `prompts` table with columns `id`, `content`, `tags TEXT[]`, `createdat`, `title`, `category`, `description`, `user_id`, `ispublic`, `likes`, `views`, `comments`. **Note the impedance mismatch** — the app's `Prompt` type uses `text`/`createdAt`/`type`, while Supabase uses `content`/`createdat`/`category`. Mapping happens in `getPromptsFromSupabase`/`savePromptToSupabase`.
 
-**RLS:** Table has RLS enabled with a permissive `FOR ALL USING (true)` policy — all-access, row filtering is done in the query layer via `user_id`.
+**RLS:** Four ownership-scoped policies, one per operation, each `TO authenticated` and each checking `auth.uid()::text = user_id`. Insert and update also carry `WITH CHECK`, so a row cannot be written under another account. `anon` is revoked from the table entirely. This is the security boundary; the `.eq('user_id', ...)` filters in the query layer are defence in depth only.
 
-**Client caching:** [supabasePromptStore.ts](src/lib/supabasePromptStore.ts) caches the Supabase client instance (URL+key keyed), re-creating on credential change. The `getPromptsFromSupabase` intentionally creates a fresh `createClient` call (bypasses cache) to ensure latest credentials on every fetch.
+**Client caching:** [client.ts](src/integrations/supabase/client.ts) memoises the client per URL+key pair and rebuilds when credentials change. Call `clearClientCache()` after changing them.
 
 ---
 
@@ -127,9 +124,9 @@ model=openai, system={systemPrompt}, prompt={userPrompt}, temperature=0.4, top_p
 
 ## Notable Conventions & Pitfalls
 
-1. **Hardcoded default Supabase credentials** in [client.ts](src/integrations/supabase/client.ts) — these are the developer's own project. Users share this instance unless they configure their own in Settings. This is by design for easy onboarding but means new users write to the Pink Pixel Supabase project by default.
+1. **No default Supabase project, on purpose.** 1.x baked in a real URL and anon key, so unconfigured installs read and wrote a single shared database. Removed in 2.0 as part of GHSA-x56f-9fqg-f568. Do not reintroduce a fallback project, even for onboarding convenience.
 
-2. **RLS policy is fully permissive** (`FOR ALL USING (true)`) — row isolation is done via `user_id` filtering in queries, not enforced at the DB level. Any user who knows someone else's `user_id` can access their prompts.
+2. **RLS enforces ownership; the query filters do not.** Policies check `auth.uid()` on every operation and `anon` holds no grants. `src/lib/supabase/setupSql.test.ts` fails the build if a permissive policy reappears in `supabase-setup.sql`.
 
 3. **PWA disabled in production builds** — the `mode === 'development'` guard means the deployed Cloudflare Pages site is not a PWA. The README advertises PWA features — this may be a bug or intentional for the npm package local use case where dev mode is used.
 
@@ -137,6 +134,6 @@ model=openai, system={systemPrompt}, prompt={userPrompt}, temperature=0.4, top_p
 
 5. **Column name mismatch** between app types and DB schema (`text`↔`content`, `type`↔`category`, `createdAt`↔`createdat`) — all mapping is manual. Any schema changes require touching both the DB and the transform functions.
 
-6. **No test suite** — zero testing infrastructure. No Vitest, no testing-library setup.
+6. **Vitest suite exists** — `npm test` runs it, `npm run test:watch` for development. Covers credential resolution, prompt mapping, signed-out guards, and the shipped RLS policies. Tests sit next to the code as `*.test.ts`.
 
 7. **`@tanstack/react-query`** is in the dependency tree and `QueryClientProvider` wraps the app, but actual data fetching bypasses it entirely (direct `async/await` calls). Could be leveraged in future for caching/loading states.

@@ -1,6 +1,6 @@
 {
   "name": "@pinkpixel/promptzy",
-  "version": "1.4.4",
+  "version": "2.0.0",
   "description": "Promptzy - A modern, cute web application for managing and organizing your AI prompts, with tagging, search, and cloud storage.",
   "desktopName": "promptzy.desktop",
   "type": "module",
@@ -56,6 +56,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
     "start": "node bin/promptzy.js",
     "prepublishOnly": "npm run build",
@@ -133,11 +135,13 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "jsdom": "^30.0.1",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^7.3.1",
     "vite-plugin-pwa": "^1.2.0",
+    "vitest": "^4.1.10",
     "wait-on": "^8.0.5"
   }
 }

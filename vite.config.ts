@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
@@ -58,5 +59,12 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.test.ts"],
+    // Each test file gets a clean localStorage, so credential precedence tests
+    // cannot leak into one another.
+    restoreMocks: true,
   },
 }));

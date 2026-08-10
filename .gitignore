@@ -30,3 +30,8 @@ pollinations.md
 supabasekeys.md
 mybuttons.txt
 pretty-elements.txt
+advisory-response.md
+
+# Playwright CLI scratch output
+.playwright-cli/
+

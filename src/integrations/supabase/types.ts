@@ -52,6 +52,9 @@ export type Database = {
           views?: number;
           comments?: number;
         };
+        // Required by @supabase/supabase-js's table type. Without it the table
+        // fails to match GenericTable and every query resolves to `never`.
+        Relationships: [];
       }
     }
     Views: {

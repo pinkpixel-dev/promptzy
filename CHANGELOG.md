@@ -5,6 +5,58 @@ All notable changes to Promptzy will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - August 10, 2026
+
+Security release. Closes [GHSA-x56f-9fqg-f568](https://github.com/pinkpixel-dev/promptzy/security/advisories/GHSA-x56f-9fqg-f568).
+
+**This release requires manual migration.** Follow [DOCS/MIGRATION-2.0.md](DOCS/MIGRATION-2.0.md) or your prompts will not appear after upgrading.
+
+### 🔐 Security
+
+- Replaced the permissive `FOR ALL USING (true)` policy in `supabase-setup.sql` with four ownership-scoped policies, one per operation, each restricted to the `authenticated` role and each checking `auth.uid()::text = user_id`.
+- Added `WITH CHECK` to the insert and update policies, so a row cannot be written under another account's `user_id`.
+- Revoked all `anon` role grants on the `prompts` table, so an unauthenticated request is refused before RLS is consulted.
+- Removed the hardcoded fallback Supabase project URL and anon key. Installs that skipped configuration were silently reading and writing a shared database; there is now no default to fall back on.
+- Replaced the client-chosen "Custom User ID" with Supabase Auth email and password sign-in. Ownership is now a verified JWT identity the database can check, not a string the browser picks.
+- Added an owner filter to the delete path, which previously filtered by `id` alone at every layer.
+- Removed the `anon-…` device identity fallback, so a signed-out client resolves no user id instead of inventing one.
+
+### ✨ Added
+
+- **Backup & Restore** in Settings. **Export prompts** downloads your whole library as `promptzy-prompts-YYYY-MM-DD.json`; **Import prompts** reads it back, showing a confirmation with the count before writing anything.
+- The importer also accepts raw `prompts` table rows exported from the Supabase SQL editor, not just Promptzy's own format, so a backup taken either way can be restored. Unreadable entries are listed on the confirmation and skipped rather than imported broken, and a prompt whose id already exists is replaced rather than duplicated.
+- Sign-in and sign-up screen, with validation, error and loading states, and full keyboard and screen-reader support.
+- Setup screen shown when no Supabase project is configured, which opens Settings on first run.
+- Account section in Settings showing the signed-in address, with a sign-out control.
+- RLS enforcement probe in Settings → Diagnose, which reports whether the permissive 1.x policy is still in place.
+- Vitest test suite: 96 tests covering credential resolution, prompt mapping, signed-out guards, connection-error classification, backup/restore parsing, and the shipped SQL policies. `npm test` and `npm run test:watch`.
+- [DOCS/MIGRATION-2.0.md](DOCS/MIGRATION-2.0.md) upgrade guide, opening with a back-up-first warning and covering in-app, CSV, JSON, and in-database backups.
+- Prominent upgrade warning at the top of the README, so nobody upgrades without knowing the app will look empty until they migrate.
+- Two new docs site pages: **Accounts & Security** (creating an account, multi-device sync, how RLS protects prompts, backing up, reading Diagnose output) and **Upgrading to 2.0** (the full migration walkthrough), under a new "Accounts & Upgrading" sidebar section.
+
+### 🐛 Fixed
+
+- `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are now actually read by the app. The Dockerfile, compose file, and docs all accepted them, but nothing consumed them, so Docker deployments built with those args silently fell back to the hardcoded project.
+- Added the `Relationships` field to the generated Supabase table types. Without it the table failed to match the current `@supabase/supabase-js` table type and every query resolved to `never`.
+- The connection test no longer requests `google.com` to infer network reachability; reaching the configured project answers that on its own.
+- Credential validation now catches a project URL with two URLs pasted into each other, a hostname with no dot, or anything trailing after the domain. `new URL()` accepts all three, so they previously surfaced much later as an opaque "Failed to fetch" caused by the content security policy blocking a nonsense host.
+- Settings now reports the specific credential problem rather than a generic "could not connect", and explains when a host falls outside the CSP's `*.supabase.co` allowance.
+- "Connect" no longer reports failure on a correctly configured project. Once the setup script revokes the `anon` role's grants, a signed-out read returns `42501 permission denied`, which the test was reading as a broken connection. That refusal is now recognised as proof the policies are working, so connecting needs only a URL and a key and succeeds before you have an account.
+
+### 🧹 Maintenance
+
+- Split the 591-line `supabasePromptStore.ts` into focused modules under `src/lib/supabase/` (`auth`, `prompts`, `promptMapper`, `diagnostics`, `setupSql`, `transfer`). `supabasePromptStore.ts` remains the import path and re-exports the public surface.
+- The setup SQL shown in Settings is now imported from `supabase-setup.sql` itself, rather than a second inline copy that had drifted from the real script.
+- Ignored `.playwright-cli/` scratch output.
+
+### 💥 Breaking
+
+- A Supabase project must be configured before the app will run. There is no built-in database.
+- An account is required. Prompts are scoped to `auth.uid()`, so existing rows must be re-pointed at your new account (see the migration guide).
+- `setCustomUserId` is gone from the public module surface.
+- `getPromptsFromSupabase`, `savePromptToSupabase`, and `deletePromptFromSupabase` are now `getPrompts`, `savePrompt`, and `deletePrompt`. The write functions return a `{ ok, error }` result instead of a bare boolean.
+- `getCurrentUserId` returns `string | null` rather than always returning a string.
+
 ## [1.4.4] - 2026-07-11
 
 ### Changed

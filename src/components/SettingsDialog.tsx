@@ -8,12 +8,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Settings, CheckCircle, AlertCircle, Sparkles, RefreshCw, Database as DatabaseIcon, Copy, ExternalLink, BookOpen } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { testSupabaseConnection, checkTableExists, CREATE_TABLE_SQL, FULL_SETUP_SQL, getSupabaseDiagnostics, setCustomUserId, getCurrentUserId, clearClientCache } from "@/lib/supabasePromptStore";
+import { testSupabaseConnection, checkTableExists, SETUP_SQL, getSupabaseDiagnostics, clearClientCache, type SupabaseDiagnostics } from "@/lib/supabasePromptStore";
+import AccountSection from "@/components/auth/AccountSection";
+import PromptTransferSection from "@/components/PromptTransferSection";
 import { saveSystemPrompt, setUseDefaultPrompt, isUsingDefaultPrompt } from "@/lib/systemPromptStore";
 import ShinyButton from "@/components/ShinyButton";
 import { SYSTEM_PROMPT_DEFAULT } from "@/components/AIAssistant";
 import {
   createSupabaseClient,
+  describeCredentialProblem,
   getSupabaseCredentials,
   saveSupabaseCredentials,
   clearSupabaseCredentials,
@@ -37,16 +40,12 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   const [supabaseKey, setSupabaseKey] = useState<string>(() => {
     return localStorage.getItem('custom-supabase-key') || '';
   });
-  const [customUserId, setCustomUserIdState] = useState<string>(() => {
-    return localStorage.getItem('custom-user-id') || '';
-  });
-  const [currentUserId, setCurrentUserId] = useState<string>('');
   const [isConnectionTesting, setIsConnectionTesting] = useState<boolean>(false);
   const [connectionStatus, setConnectionStatus] = useState<"untested" | "success" | "failed">("untested");
   const [tableStatus, setTableStatus] = useState<"exists" | "missing" | "unknown">("unknown");
   const [showSqlSetup, setShowSqlSetup] = useState<boolean>(false);
   const [showDiagnostics, setShowDiagnostics] = useState<boolean>(false);
-  const [diagnosticsData, setDiagnosticsData] = useState<Record<string, unknown> | null>(null);
+  const [diagnosticsData, setDiagnosticsData] = useState<SupabaseDiagnostics | null>(null);
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
   const [showDbSetupGuide, setShowDbSetupGuide] = useState<boolean>(false);
 
@@ -64,11 +63,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   });
   const { toast } = useToast();
 
-  // Load current user ID when dialog opens
   useEffect(() => {
     if (isOpen) {
-      getCurrentUserId().then(setCurrentUserId);
-
       // Update the custom system prompt if it's still the old version
       const storedPrompt = localStorage.getItem('ai-system-prompt');
       if (storedPrompt && storedPrompt !== SYSTEM_PROMPT_DEFAULT) {
@@ -87,13 +83,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-
-  const handleCustomUserIdChange = (newUserId: string) => {
-    setCustomUserIdState(newUserId);
-    setCustomUserId(newUserId);
-    // Update current user ID display
-    getCurrentUserId().then(setCurrentUserId);
-  };
 
   const extractProjectId = (url: string): string => {
     // Extract the project ID from the Supabase URL
@@ -118,20 +107,25 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
       return;
     }
 
-    // Basic validation before even trying to connect
-    if (!supabaseUrl.startsWith('https://') || !supabaseUrl.includes('.supabase.co')) {
+    // Validate before connecting, so a malformed URL reports the actual problem
+    // instead of surfacing later as an opaque "Failed to fetch".
+    const problem = describeCredentialProblem({ supabaseUrl, supabaseKey });
+    if (problem) {
       toast({
-        title: "Invalid URL Format",
-        description: "Supabase URL should be in the format: https://your-project.supabase.co",
+        title: "Check your credentials",
+        description: problem,
         variant: "destructive"
       });
       return;
     }
 
-    if (supabaseKey.length < 20) {
+    // The app's Content-Security-Policy only allows connections to *.supabase.co,
+    // so a self-hosted instance on another domain would be blocked by the browser
+    // before it ever reached the network.
+    if (!supabaseUrl.includes('.supabase.co')) {
       toast({
-        title: "Invalid Key Format",
-        description: "The Supabase key appears to be too short. Please check your API key (publishable or anon JWT).",
+        title: "Unsupported Supabase host",
+        description: "Promptzy's content security policy only allows *.supabase.co. A self-hosted instance on a custom domain needs the CSP in index.html widened first.",
         variant: "destructive"
       });
       return;
@@ -192,8 +186,18 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
       // Check if table exists
       const client = createSupabaseClient();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tableExists = await checkTableExists(client as any);
+      if (!client) {
+        setConnectionStatus("failed");
+        setIsConnectionTesting(false);
+        toast({
+          title: "Connection Failed",
+          description: "Those credentials could not be used to build a Supabase client.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const tableExists = await checkTableExists(client);
 
       if (tableExists) {
         setTableStatus("exists");
@@ -269,7 +273,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   };
 
   const handleCopySql = () => {
-    navigator.clipboard.writeText(CREATE_TABLE_SQL.trim());
+    navigator.clipboard.writeText(SETUP_SQL.trim());
     toast({
       title: "SQL Copied",
       description: "Table creation SQL copied to clipboard."
@@ -277,7 +281,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   };
 
   const handleCopyFullSql = () => {
-    navigator.clipboard.writeText(FULL_SETUP_SQL.trim());
+    navigator.clipboard.writeText(SETUP_SQL.trim());
     toast({
       title: "Setup SQL Copied",
       description: "Full database setup SQL copied to clipboard."
@@ -353,8 +357,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 
       // Check if table exists - but don't block saving if it doesn't
       const client = createSupabaseClient();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const tableExists = await checkTableExists(client as any);
+      const tableExists = client ? await checkTableExists(client) : false;
 
       if (!tableExists) {
         toast({
@@ -471,20 +474,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                         Use your <strong>publishable key</strong> (<code className="text-xs px-0.5 rounded" style={{ background: "rgba(255,255,255,0.08)" }}>sb_publishable_…</code>) — the modern format recommended by Supabase. Legacy <strong>anon JWT</strong> keys are also accepted.
                       </p>
                     </div>
-                    <div className="space-y-1">
-                      <Label htmlFor="custom-user-id">Custom User ID (Optional)</Label>
-                      <Input
-                        id="custom-user-id"
-                        placeholder="Enter a custom user ID to sync across browsers"
-                        value={customUserId}
-                        onChange={(e) => handleCustomUserIdChange(e.target.value)}
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Current User ID: <span className="font-mono" style={{ color: "var(--accent-cyan)" }}>{currentUserId || 'Loading...'}</span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        💡 Set a custom user ID to access your prompts from any browser. Leave empty for device-specific storage.
-                      </p>
+                    <div className="space-y-2 pt-1">
+                      <Label>Account</Label>
+                      <AccountSection refreshToken={isOpen} />
+                    </div>
+
+                    <div className="space-y-2 pt-1">
+                      <Label>Backup & Restore</Label>
+                      <PromptTransferSection />
                     </div>
                   </div>
 
@@ -706,7 +703,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     </div>
 
                     <div className="relative mt-2">
-                      <pre className="text-xs p-2 bg-gray-800 text-gray-100 rounded-md overflow-x-auto">{CREATE_TABLE_SQL.trim()}</pre>
+                      <pre className="text-xs p-2 bg-gray-800 text-gray-100 rounded-md overflow-x-auto">{SETUP_SQL.trim()}</pre>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -1043,7 +1040,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   Copy SQL
                 </button>
               </div>
-              <pre className="text-xs p-3 overflow-x-auto" style={{ background: "rgba(0,0,0,0.35)", color: "#a5f3fc", maxHeight: "300px", overflowY: "auto" }}>{FULL_SETUP_SQL.trim()}</pre>
+              <pre className="text-xs p-3 overflow-x-auto" style={{ background: "rgba(0,0,0,0.35)", color: "#a5f3fc", maxHeight: "300px", overflowY: "auto" }}>{SETUP_SQL.trim()}</pre>
             </div>
           </div>
 
@@ -1062,7 +1059,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           <div className="p-3 rounded-xl text-xs" style={{ background: "rgba(34,211,238,0.06)", border: "1px solid rgba(34,211,238,0.18)" }}>
             <p className="font-medium mb-1" style={{ color: "var(--accent-cyan)" }}>💡 Pro tip — sync across devices</p>
             <p style={{ color: "var(--text-soft)" }}>
-              Set a <strong>Custom User ID</strong> in the Supabase Configuration section. Any device that uses the same User ID (and the same Supabase project) will see all the same prompts.
+              Point each device at the same Supabase project and sign in with the same account. Your prompts follow your account, so your phone and your laptop stay in step.
             </p>
           </div>
         </div>

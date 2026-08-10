@@ -8,9 +8,8 @@ import PromptForm from "@/components/PromptForm";
 import AIAssistant from "@/components/AIAssistant";
 import ShinyButton from "@/components/ShinyButton";
 import { Prompt, Tag } from "@/types";
-import { getPromptsFromSupabase, savePromptToSupabase, deletePromptFromSupabase, testSupabaseConnection } from "@/lib/supabasePromptStore";
+import { getPrompts, savePrompt, deletePrompt, testSupabaseConnection } from "@/lib/supabasePromptStore";
 import { useToast } from "@/hooks/use-toast";
-import { createSupabaseClient } from "@/integrations/supabase/client";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -24,16 +23,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
+// AuthGate guarantees a configured project and a signed-in user before this
+// page renders, so it only has to care about reaching the database.
 const Index = () => {
-  // Create a fresh Supabase client to handle authentication (memoized to prevent recreation)
-  const supabase = useMemo(() => createSupabaseClient(), []);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [allTags, setAllTags] = useState<Tag[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPrompt, setEditingPrompt] = useState<Prompt | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [supabaseConnected, setSupabaseConnected] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [refreshKey, setRefreshKey] = useState<number>(0);
@@ -74,25 +72,9 @@ const Index = () => {
     }
   }, []);
 
-  // Check Supabase auth status
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      setIsLoggedIn(!!data.session);
-      checkSupabaseConnection();
-    };
-
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session);
-      checkSupabaseConnection();
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [checkSupabaseConnection, supabase.auth]);
+    void checkSupabaseConnection();
+  }, [checkSupabaseConnection]);
 
   // Function to load prompts from Supabase (extracted for reuse)
   const loadPrompts = useCallback(async (forceRefresh = false) => {
@@ -104,7 +86,7 @@ const Index = () => {
     }
 
     try {
-      const supabasePrompts = await getPromptsFromSupabase();
+      const supabasePrompts = await getPrompts();
       console.log(`Retrieved ${supabasePrompts.length} prompts from Supabase`);
 
       setPrompts(supabasePrompts);
@@ -212,8 +194,15 @@ const Index = () => {
     }
 
     try {
-      // Save to Supabase
-      await savePromptToSupabase(completePromptData);
+      const result = await savePrompt(completePromptData);
+      if (!result.ok) {
+        toast({
+          title: "Error saving prompt",
+          description: result.error ?? "Could not save prompt to Supabase. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       // Update state
       const updatedPrompts = editingPrompt?.id
@@ -254,8 +243,15 @@ const Index = () => {
     }
 
     try {
-      // Delete from Supabase
-      await deletePromptFromSupabase(id);
+      const result = await deletePrompt(id);
+      if (!result.ok) {
+        toast({
+          title: "Error deleting prompt",
+          description: result.error ?? "Could not delete prompt from Supabase. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
 
       // Update state
       const updatedPrompts = prompts.filter(p => p.id !== id);
