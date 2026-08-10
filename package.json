@@ -143,5 +143,10 @@
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.1.10",
     "wait-on": "^8.0.5"
+  },
+  "allowScripts": {
+    "@swc/core@1.15.18": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.1": true
   }
 }
